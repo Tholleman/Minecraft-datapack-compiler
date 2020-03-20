@@ -38,14 +38,14 @@ public class Builder
 	{
 		if (args.length > 0 && args[0].equalsIgnoreCase("clean"))
 		{
-			clean();
+			clean(true);
 			return;
 		}
 		
 		System.out.println("Minecraft version " + CURRENT_MINECRAFT_VERSION);
 		System.out.println("Compile level: " + COMPILE_LEVEL.label);
 		
-		clean();
+		clean(true);
 		
 		iterate(new File(SOURCE_DIRECTORY));
 		new PackDotMCMetaCreator(Properties.DESCRIPTION).start();
@@ -70,6 +70,12 @@ public class Builder
 		System.out.println("All files inside \"" + SOURCE_DIRECTORY + "\" are now parsed and ready to be used");
 		
 		Zipper.zip(toZip, getDestZipFile());
+		
+		if (CLEAN_AFTER)
+		{
+			clean(false);
+		}
+		
 		System.out.println("The datapack is now a .zip file and ready to be distributed");
 	}
 	
@@ -80,7 +86,7 @@ public class Builder
 		return DATAPACK_NAME + " " + CURRENT_MINECRAFT_VERSION + COMPILE_LEVEL.zipSuffix + ZIP;
 	}
 	
-	private static void clean() throws IOException
+	private static void clean(boolean includingZip) throws IOException
 	{
 		//noinspection ConstantConditions
 		for (File file : new File("./").listFiles())
@@ -89,7 +95,7 @@ public class Builder
 		}
 		
 		delete(new File(OUTPUT_DIRECTORY));
-		delete(new File(getDestZipFile()));
+		if (includingZip) delete(new File(getDestZipFile()));
 		delete(new File(PACK_DOT_MCMETA));
 		
 		System.out.println("Cleaned artifacts from previous build");

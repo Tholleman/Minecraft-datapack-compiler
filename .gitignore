@@ -1,3 +1,11 @@
+# IntelliJ files
 /.idea
 /out
 compiler.iml
+
+# Testing data
+/data
+/data source
+config.properties
+*.zip
+*.mcmeta

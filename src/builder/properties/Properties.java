@@ -57,4 +57,6 @@ public class Properties
 	 * The description of the datapack
 	 */
 	public static final String DESCRIPTION = propertiesLoader.getProperty("DESCRIPTION");
+	
+	public static final boolean CLEAN_AFTER = Boolean.parseBoolean(propertiesLoader.getProperty("CLEAN_AFTER"));
 }
