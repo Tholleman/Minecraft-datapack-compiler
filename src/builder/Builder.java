@@ -38,12 +38,18 @@ public class Builder
 	 */
 	public static void build() throws IOException, InterruptedException
 	{
-		System.out.println("Minecraft version " + CURRENT_MINECRAFT_VERSION);
-		System.out.println("Compile level: " + COMPILE_LEVEL.label);
+		System.out.println("Minecraft version " + CURRENT_MINECRAFT_VERSION + "\n" +
+		                   "Compile level: " + COMPILE_LEVEL.label + "\n" +
+		                   "\n");
 		
 		Cleaner.fullClean();
 		
-		iterate(new File(SOURCE_DIRECTORY));
+		boolean createdDataDirectory = iterate(new File(SOURCE_DIRECTORY));
+		if (!createdDataDirectory)
+		{
+			System.out.println("The data source directory was empty (or only filled with files that are ignored)");
+			return;
+		}
 		new PackDotMCMetaCreator(Properties.DESCRIPTION).start();
 		File[] toZip = getFilesToZip();
 		
