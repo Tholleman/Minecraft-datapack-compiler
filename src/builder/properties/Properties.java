@@ -58,5 +58,8 @@ public class Properties
 	 */
 	public static final String DESCRIPTION = propertiesLoader.getProperty("DESCRIPTION");
 	
+	/**
+	 * Remove the data directory and mcmeta file after building the .zip file when {@code true}
+	 */
 	public static final boolean CLEAN_AFTER = Boolean.parseBoolean(propertiesLoader.getProperty("CLEAN_AFTER"));
 }
