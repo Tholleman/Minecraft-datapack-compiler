@@ -32,33 +32,32 @@ public class Initialize
 	{
 		File configFile = new File(CONFIG_PATH);
 		if (configFile.exists()) return;
-		try (FileOutputStream configBuilder = new FileOutputStream(configFile);
-		     FileWriter fw = new FileWriter(configFile))
+		try (FileWriter configBuilder = new FileWriter(configFile))
 		{
 			Properties.Key[] values = Properties.Key.values();
 			for (int i = 0; i < values.length; i++)
 			{
 				Properties.Key key = values[i];
-				configBuilder.write((key.toString() + "=").getBytes());
+				configBuilder.write((key.toString() + "="));
 				switch (key)
 				{
 					case DATAPACK_NAME:
-						configBuilder.write(projectName.getBytes());
+						configBuilder.write(projectName);
 						break;
 					case CLEAN_AFTER:
-						configBuilder.write("false".getBytes());
+						configBuilder.write("false");
 						break;
 					case COMPILE_LEVEL:
-						configBuilder.write("1".getBytes());
+						configBuilder.write("1");
 						break;
 					case DESCRIPTION:
-						configBuilder.write(description.getBytes());
+						configBuilder.write(description);
 						break;
 					default:
 				}
 				if (i != values.length - 1)
 				{
-					configBuilder.write("\n".getBytes());
+					configBuilder.write("\n");
 				}
 			}
 		}
