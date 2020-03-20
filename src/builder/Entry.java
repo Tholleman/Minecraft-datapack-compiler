@@ -27,7 +27,7 @@ public class Entry
 					                   "help  : To show this message again.");
 					return;
 				default:
-					throw new BuildException("Unknown argument: \"" + args[0] + "\" add argument \"help\" to see which options you do have.");
+					throw new BuildException("Unknown argument: \"" + args[0] + "\" use argument \"help\" to see which options you do have.");
 			}
 		}
 		else
