@@ -10,6 +10,10 @@ public class Entry
 		{
 			Cleaner.fullClean();
 		}
+		else if (argumentCheck("init", args))
+		{
+			Initialize.init();
+		}
 		else
 		{
 			Builder.build();

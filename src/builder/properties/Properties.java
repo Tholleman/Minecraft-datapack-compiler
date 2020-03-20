@@ -18,6 +18,15 @@ public class Properties
 	 */
 	private Properties() {}
 	
+	public enum Key
+	{
+		DATAPACK_NAME,
+		CURRENT_MINECRAFT_VERSION,
+		COMPILE_LEVEL,
+		DESCRIPTION,
+		CLEAN_AFTER
+	}
+	
 	/**
 	 * Property loader
 	 */
@@ -38,12 +47,12 @@ public class Properties
 	/**
 	 * Name of the datapack
 	 */
-	public static final String DATAPACK_NAME = propertiesLoader.getProperty("DATAPACK_NAME");
+	public static final String DATAPACK_NAME = propertiesLoader.getProperty(Key.DATAPACK_NAME.toString());
 	
 	/**
 	 * The version of minecraft that the datapack is made for
 	 */
-	public static final String CURRENT_MINECRAFT_VERSION = propertiesLoader.getProperty("CURRENT_MINECRAFT_VERSION");
+	public static final String CURRENT_MINECRAFT_VERSION = propertiesLoader.getProperty(Key.CURRENT_MINECRAFT_VERSION.toString());
 	
 	/**
 	 * The level of commands that should be compiled.
@@ -51,15 +60,15 @@ public class Properties
 	 * By default, commands have a level of 1.
 	 * The compile level indicates the minimum a command has to be for it to be parsed.
 	 */
-	public static final CompileLevel COMPILE_LEVEL = CompileLevel.getLevel(Integer.parseInt(propertiesLoader.getProperty("COMPILE_LEVEL")));
+	public static final CompileLevel COMPILE_LEVEL = CompileLevel.getLevel(Integer.parseInt(propertiesLoader.getProperty(Key.COMPILE_LEVEL.toString())));
 	
 	/**
 	 * The description of the datapack
 	 */
-	public static final String DESCRIPTION = propertiesLoader.getProperty("DESCRIPTION");
+	public static final String DESCRIPTION = propertiesLoader.getProperty(Key.DESCRIPTION.toString());
 	
 	/**
 	 * Remove the data directory and mcmeta file after building the .zip file when {@code true}
 	 */
-	public static final boolean CLEAN_AFTER = Boolean.parseBoolean(propertiesLoader.getProperty("CLEAN_AFTER"));
+	public static final boolean CLEAN_AFTER = Boolean.parseBoolean(propertiesLoader.getProperty(Key.CLEAN_AFTER.toString()));
 }

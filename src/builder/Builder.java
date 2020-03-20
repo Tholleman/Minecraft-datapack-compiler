@@ -38,11 +38,12 @@ public class Builder
 	 */
 	public static void build() throws IOException, InterruptedException
 	{
-		System.out.println("Minecraft version " + CURRENT_MINECRAFT_VERSION + "\n" +
-		                   "Compile level: " + COMPILE_LEVEL.label + "\n" +
-		                   "\n");
+		System.out.print("Minecraft version " + CURRENT_MINECRAFT_VERSION + "\n" +
+		                 "Compile level: " + COMPILE_LEVEL.label + "\n" +
+		                 "\n");
 		
 		Cleaner.fullClean();
+		System.out.println("Removed artifacts from previous build");
 		
 		boolean createdDataDirectory = iterate(new File(SOURCE_DIRECTORY));
 		if (!createdDataDirectory)
@@ -58,13 +59,13 @@ public class Builder
 		System.out.println("All files inside \"" + SOURCE_DIRECTORY + "\" are now parsed and ready to be used");
 		
 		Zipper.zip(toZip, getDestZipFile());
+		System.out.println("The datapack is now a .zip file and ready to be distributed");
 		
 		if (CLEAN_AFTER)
 		{
 			Cleaner.postClean();
+			System.out.println("\nRemoved artifacts that aren't the final zip");
 		}
-		
-		System.out.println("The datapack is now a .zip file and ready to be distributed");
 	}
 	
 	private static String getDestZipFile()
