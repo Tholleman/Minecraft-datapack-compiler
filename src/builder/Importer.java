@@ -6,7 +6,6 @@ import org.json.JSONObject;
 
 import java.io.*;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 
 import static builder.constants.FileStrings.OUTPUT_DIRECTORY;
@@ -45,7 +44,7 @@ public class Importer
 		assert file != null;
 		if (file.isDirectory())
 		{
-			Files.createDirectory(Path.of(getSourceVersion(file)));
+			Files.createDirectory(new File(getSourceVersion(file)).toPath());
 			//noinspection ConstantConditions
 			for (File listFile : file.listFiles())
 			{
@@ -60,7 +59,7 @@ public class Importer
 			return;
 		}
 		
-		Files.copy(file.toPath(), Path.of(getSourceVersion(file)), StandardCopyOption.REPLACE_EXISTING);
+		Files.copy(file.toPath(), new File(getSourceVersion(file)).toPath(), StandardCopyOption.REPLACE_EXISTING);
 	}
 	
 	private static void importFunctionFile(File file) throws IOException
@@ -71,7 +70,7 @@ public class Importer
 			String line;
 			while ((line = br.readLine()) != null)
 			{
-				if (line.isBlank() ||
+				if (line.trim().isEmpty() ||
 				    line.startsWith(Identifiers.COMMENT_PREFIX) ||
 				    line.startsWith(Identifiers.COMMAND_PREFIX))
 				{
