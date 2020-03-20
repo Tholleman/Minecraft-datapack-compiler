@@ -17,7 +17,7 @@ import static builder.constants.FileStrings.*;
 import static builder.properties.Properties.*;
 
 /**
- * The main class that will build the datapack with {@link Builder#main(String[])}
+ * The main class that will build the datapack with {@link #build()}
  *
  * @author Thomas Holleman
  */
@@ -27,25 +27,17 @@ public class Builder
 	 * Build the datapack using the files from {@link builder.constants.FileStrings#SOURCE_DIRECTORY}
 	 * into {@link builder.constants.FileStrings#OUTPUT_DIRECTORY} and into a {@link builder.constants.FileStrings#ZIP} file.
 	 *
-	 * @param args Not used
-	 *
 	 * @throws IOException          Could be thrown while reading the files out of {@link builder.constants.FileStrings#SOURCE_DIRECTORY},
 	 *                              while writing to {@link builder.constants.FileStrings#OUTPUT_DIRECTORY},
 	 *                              or while zipping it into a {@link builder.constants.FileStrings#ZIP} file
 	 * @throws InterruptedException Could be thrown while failing to join up the threads that were made to parse each file
 	 */
-	public static void main(String[] args) throws IOException, InterruptedException
+	public static void build() throws IOException, InterruptedException
 	{
-		if (args.length > 0 && args[0].equalsIgnoreCase("clean"))
-		{
-			clean(true);
-			return;
-		}
-		
 		System.out.println("Minecraft version " + CURRENT_MINECRAFT_VERSION);
 		System.out.println("Compile level: " + COMPILE_LEVEL.label);
 		
-		clean(true);
+		Cleaner.fullClean();
 		
 		iterate(new File(SOURCE_DIRECTORY));
 		new PackDotMCMetaCreator(Properties.DESCRIPTION).start();
@@ -73,7 +65,7 @@ public class Builder
 		
 		if (CLEAN_AFTER)
 		{
-			clean(false);
+			Cleaner.postClean();
 		}
 		
 		System.out.println("The datapack is now a .zip file and ready to be distributed");
@@ -84,43 +76,6 @@ public class Builder
 	private static String getDestZipFile()
 	{
 		return DATAPACK_NAME + " " + CURRENT_MINECRAFT_VERSION + COMPILE_LEVEL.zipSuffix + ZIP;
-	}
-	
-	private static void clean(boolean includingZip) throws IOException
-	{
-		//noinspection ConstantConditions
-		for (File file : new File("./").listFiles())
-		{
-			if (file.getName().endsWith(ZIP)) unsafeDelete(file);
-		}
-		
-		delete(new File(OUTPUT_DIRECTORY));
-		if (includingZip) delete(new File(getDestZipFile()));
-		delete(new File(PACK_DOT_MCMETA));
-		
-		System.out.println("Cleaned artifacts from previous build");
-	}
-	
-	private static void delete(File file) throws IOException
-	{
-		if (file.exists())
-		{
-			unsafeDelete(file);
-		}
-	}
-	
-	private static void unsafeDelete(File file) throws IOException
-	{
-		if (file.isDirectory())
-		{
-			//noinspection ConstantConditions
-			for (File listFile : file.listFiles())
-			{
-				unsafeDelete(listFile);
-			}
-		}
-		
-		Files.delete(file.toPath());
 	}
 	
 	private static File[] getFilesToZip()
