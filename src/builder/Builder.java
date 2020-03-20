@@ -11,7 +11,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 
 import static builder.MultiThread.Copy;
 import static builder.MultiThread.rejoin;
@@ -136,7 +135,7 @@ public class Builder
 			return true;
 		}
 		
-		new Copy(f.toPath(), Path.of(dataVersion(f))).start();
+		new Copy(f.toPath(), new File(dataVersion(f)).toPath()).start();
 		return true;
 	}
 	
