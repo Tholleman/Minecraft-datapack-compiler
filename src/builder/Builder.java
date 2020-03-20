@@ -70,7 +70,7 @@ public class Builder
 	
 	private static String getDestZipFile()
 	{
-		return DATAPACK_NAME + " " + CURRENT_MINECRAFT_VERSION + COMPILE_LEVEL.zipSuffix + ZIP;
+		return (DATAPACK_NAME + " " + CURRENT_MINECRAFT_VERSION + COMPILE_LEVEL.zipSuffix).trim() + ZIP;
 	}
 	
 	private static File[] getFilesToZip()

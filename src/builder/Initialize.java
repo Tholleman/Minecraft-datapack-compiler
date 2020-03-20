@@ -5,6 +5,7 @@ import builder.properties.Properties;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 
 import static builder.constants.FileStrings.CONFIG_PATH;
@@ -19,14 +20,20 @@ public class Initialize
 	{
 		String projectName = new File("./").getCanonicalFile().getName();
 		createConfigFile(projectName);
-		createDataSource(projectName.replaceAll("\\s+", "_"));
+		createDataSource(projectName);
 	}
 	
 	private static void createConfigFile(String projectName) throws IOException
 	{
+		createConfigFile(projectName, "");
+	}
+	
+	public static void createConfigFile(String projectName, String description) throws IOException
+	{
 		File configFile = new File(CONFIG_PATH);
 		if (configFile.exists()) return;
-		try (FileOutputStream configBuilder = new FileOutputStream(configFile))
+		try (FileOutputStream configBuilder = new FileOutputStream(configFile);
+		     FileWriter fw = new FileWriter(configFile))
 		{
 			Properties.Key[] values = Properties.Key.values();
 			for (int i = 0; i < values.length; i++)
@@ -43,6 +50,9 @@ public class Initialize
 						break;
 					case COMPILE_LEVEL:
 						configBuilder.write("1".getBytes());
+						break;
+					case DESCRIPTION:
+						configBuilder.write(description.getBytes());
 						break;
 					default:
 				}
