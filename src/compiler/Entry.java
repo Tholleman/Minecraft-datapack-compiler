@@ -4,11 +4,15 @@ import compiler.builder.Builder;
 import compiler.cleaner.Cleaner;
 import compiler.importer.Importer;
 import compiler.initializer.Initialize;
+import compiler.properties.Property;
+import compiler.upgrader.Upgrader;
 
 import java.io.IOException;
 
 public class Entry
 {
+	public static final String STANDARD = "Metafile 1.0";
+	
 	public static void main(String[] args) throws IOException, InterruptedException
 	{
 		if (args != null && args.length > 0)
@@ -37,6 +41,8 @@ public class Entry
 		}
 		else
 		{
+			Property.setup();
+			if (!STANDARD.equals(Property.PARSE_STANDARD.getValue())) Upgrader.upgrade();
 			Builder.build();
 		}
 	}

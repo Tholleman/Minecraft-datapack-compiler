@@ -1,15 +1,15 @@
 package compiler.initializer;
 
+import compiler.Entry;
 import compiler.FileStrings;
-import compiler.properties.Properties;
+import compiler.properties.Property;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 
-import static compiler.FileStrings.CONFIG_PATH;
 import static compiler.FileStrings.SOURCE_DIRECTORY;
+import static compiler.properties.Property.*;
 import static java.io.File.separator;
 
 public class Initialize
@@ -23,44 +23,23 @@ public class Initialize
 		createDataSource(projectName);
 	}
 	
-	private static void createConfigFile(String projectName) throws IOException
+	private static void createConfigFile(String projectName)
 	{
 		createConfigFile(projectName, "");
 	}
 	
-	public static void createConfigFile(String projectName, String description) throws IOException
+	public static void createConfigFile(String projectName, String description)
 	{
-		File configFile = new File(CONFIG_PATH);
-		if (configFile.exists()) return;
-		try (FileWriter configBuilder = new FileWriter(configFile))
-		{
-			Properties.Key[] values = Properties.Key.values();
-			for (int i = 0; i < values.length; i++)
-			{
-				Properties.Key key = values[i];
-				configBuilder.write((key.toString() + "="));
-				switch (key)
-				{
-					case DATAPACK_NAME:
-						configBuilder.write(projectName);
-						break;
-					case CLEAN_AFTER:
-						configBuilder.write("false");
-						break;
-					case COMPILE_LEVEL:
-						configBuilder.write("1");
-						break;
-					case DESCRIPTION:
-						configBuilder.write(description);
-						break;
-					default:
-				}
-				if (i != values.length - 1)
-				{
-					configBuilder.write("\n");
-				}
-			}
-		}
+		DATAPACK_NAME.setValue(projectName);
+		DATAPACK_VERSION.setValue("1.0");
+		DATAPACK_DESCRIPTION.setValue(description);
+		
+		CLEAN_AFTER.setValue("false");
+		
+		COMPILE_LEVEL.setValue("1");
+		PARSE_STANDARD.setValue(Entry.STANDARD);
+		
+		Property.store();
 	}
 	
 	private static void createDataSource(String projectName) throws IOException

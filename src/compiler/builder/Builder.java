@@ -1,23 +1,22 @@
 package compiler.builder;
 
 import compiler.FileStrings;
-import compiler.cleaner.Cleaner;
 import compiler.builder.MultiThread.MinifyThread;
 import compiler.builder.MultiThread.PackDotMCMetaCreator;
 import compiler.builder.MultiThread.ParseThread;
-import compiler.constants.ErrorMessages;
-import compiler.properties.Properties;
 import compiler.builder.zipper.Zipper;
+import compiler.cleaner.Cleaner;
+import compiler.constants.ErrorMessages;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 
+import static compiler.FileStrings.*;
 import static compiler.builder.MultiThread.Copy;
 import static compiler.builder.MultiThread.rejoin;
-import static compiler.FileStrings.*;
-import static compiler.properties.Properties.*;
+import static compiler.properties.Property.*;
 
 /**
  * The main class that will build the datapack with {@link #build()}
@@ -39,8 +38,8 @@ public class Builder
 	 */
 	public static void build() throws IOException, InterruptedException
 	{
-		System.out.print("Minecraft version " + CURRENT_MINECRAFT_VERSION + "\n" +
-		                 "Compile level: " + COMPILE_LEVEL.label + "\n" +
+		System.out.print("Version " + DATAPACK_VERSION + "\n" +
+		                 "Compile level: " + getCompileLevel().name + "\n" +
 		                 "\n");
 		
 		Cleaner.fullClean();
@@ -52,7 +51,7 @@ public class Builder
 			System.out.println("The data source directory was empty (or only filled with files that are ignored)");
 			return;
 		}
-		new PackDotMCMetaCreator(Properties.DESCRIPTION).start();
+		new PackDotMCMetaCreator(DATAPACK_DESCRIPTION.getValue()).start();
 		File[] toZip = getFilesToZip();
 		
 		rejoin();
@@ -62,7 +61,7 @@ public class Builder
 		Zipper.zip(toZip, getDestZipFile());
 		System.out.println("The datapack is now a .zip file and ready to be distributed");
 		
-		if (CLEAN_AFTER)
+		if (Boolean.parseBoolean(CLEAN_AFTER.getValue()))
 		{
 			Cleaner.postClean();
 			System.out.println("\nRemoved artifacts that aren't the final zip");
@@ -71,7 +70,7 @@ public class Builder
 	
 	private static String getDestZipFile()
 	{
-		return (DATAPACK_NAME + " " + CURRENT_MINECRAFT_VERSION + COMPILE_LEVEL.zipSuffix).trim() + FileExtensions.ZIP;
+		return (DATAPACK_NAME + " " + DATAPACK_VERSION + getCompileLevel().zipSuffix).trim() + FileExtensions.ZIP;
 	}
 	
 	private static File[] getFilesToZip()
@@ -126,7 +125,7 @@ public class Builder
 		{
 			if (f.getName().matches(s))
 			{
-				new ParseThread(f, dataVersion(f), COMPILE_LEVEL.level).start();
+				new ParseThread(f, dataVersion(f), getCompileLevel().level).start();
 				return true;
 			}
 		}
