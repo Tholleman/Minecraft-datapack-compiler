@@ -9,6 +9,7 @@ public class Identifiers
 	
 	public static final String COMMAND_PREFIX = "/";
 	public static final String META_PREFIX = "\\";
+	public static final char ESCAPE = '^';
 	
 	public static final String INLINE_META_PREFIX = "<<";
 	public static final String INLINE_META_SUFFIX = ">>";

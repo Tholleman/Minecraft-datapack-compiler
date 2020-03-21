@@ -5,9 +5,9 @@ import compiler.constants.MetaTags;
 import java.io.*;
 import java.util.HashMap;
 
+import static compiler.builder.parser.Helper.splitOnWS;
 import static compiler.constants.ErrorMessages.*;
 import static compiler.constants.Identifiers.*;
-import static compiler.builder.parser.Helper.splitOnWS;
 
 /**
  * Will change a file from this projects format to an mcfunction usable by minecraft
@@ -218,6 +218,11 @@ public class Parser
 							}
 							line = parseInlineMeta(line);
 							
+							if (line.charAt(0) == ESCAPE)
+							{
+								line = line.substring(1);
+							}
+							
 							result.append(line);
 							continue;
 						}
@@ -261,13 +266,37 @@ public class Parser
 		private String parseInlineMeta(String line)
 		{
 			int last;
-			while ((last = line.lastIndexOf(INLINE_META_PREFIX)) != -1)
+			while ((last = lastInlineStart(line)) != -1)
 			{
-				int endIndex = line.indexOf(INLINE_META_SUFFIX, last);
+				int endIndex = firstInlineEnd(line, last);
+				if (endIndex == -1) throw new ParsingException("The " + INLINE_META_PREFIX + " starting on line " + lineCounter + " at position " + (last + 1) + " was not closed with a " + INLINE_META_SUFFIX);
 				String result = handleInlineMeta(line.substring(last + INLINE_META_PREFIX.length(), endIndex));
 				line = line.substring(0, last) + result + line.substring(endIndex + INLINE_META_SUFFIX.length());
 			}
 			return line;
+		}
+		
+		private int lastInlineStart(String line)
+		{
+			int index = line.lastIndexOf(INLINE_META_PREFIX);
+			while (index > 0 && line.charAt(index - 1) == ESCAPE &&
+			       !(index != 1 && line.charAt(index - 2) == ESCAPE))
+			{
+				index = line.lastIndexOf(INLINE_META_PREFIX, index - 1);
+			}
+			return index;
+		}
+		
+		private int firstInlineEnd(String line, int from)
+		{
+			int index = line.indexOf(INLINE_META_SUFFIX, from);
+			while (index != -1 && line.charAt(index - 1) == ESCAPE &&
+			       !(index > 1 && line.charAt(index - 2) == ESCAPE))
+			{
+				from = index + 1;
+				index = line.indexOf(INLINE_META_SUFFIX, from);
+			}
+			return index;
 		}
 		
 		private String handleInlineMeta(String line)

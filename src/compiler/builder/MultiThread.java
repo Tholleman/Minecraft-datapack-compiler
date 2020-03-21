@@ -36,10 +36,7 @@ public abstract class MultiThread extends Thread
 		}
 		if (!failures.isEmpty())
 		{
-			for (Throwable failure : failures)
-			{
-				failure.printStackTrace();
-			}
+			// TODO: cleanly communicate all errors
 			throw new BuildException(failures.size() + " exception" + (failures.size() == 1 ? "" : "s") + ". " +
 			                         "First exception: ", failures.get(0));
 		}
