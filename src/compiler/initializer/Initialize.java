@@ -1,9 +1,9 @@
 package compiler.initializer;
 
-import compiler.Entry;
 import compiler.FileStrings;
 import compiler.properties.Property;
 import compiler.properties.SetupException;
+import compiler.upgrader.Version;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -47,7 +47,7 @@ public class Initialize
 		CLEAN_AFTER.setValueWhenEmpty("false");
 		
 		COMPILE_LEVEL.setValueWhenEmpty("1");
-		PARSE_STANDARD.setValueWhenEmpty(Entry.STANDARD);
+		PARSE_STANDARD.setValueWhenEmpty(Version.current().code);
 		
 		Property.store();
 	}

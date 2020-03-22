@@ -6,13 +6,12 @@ import compiler.importer.Importer;
 import compiler.initializer.Initialize;
 import compiler.properties.Property;
 import compiler.upgrader.Upgrader;
+import compiler.upgrader.Version;
 
 import java.io.IOException;
 
 public class Entry
 {
-	public static final String STANDARD = "Metafile 1.0";
-	
 	private static final Thread.UncaughtExceptionHandler exceptionHandler = new Thread.UncaughtExceptionHandler()
 	{
 		@Override
@@ -59,6 +58,10 @@ public class Entry
 					checkArgumentAmount(args, 0);
 					Importer.create();
 					return;
+				case "version":
+					checkArgumentAmount(args, 0);
+					System.out.println("This compiler currently supports " + Version.current().code);
+					return;
 				case "help":
 					checkArgumentAmount(args, 0);
 					System.out.print("Compiler arguments\n" +
@@ -70,6 +73,7 @@ public class Entry
 					                 "\n" +
 					                 "Miscellaneous\n" +
 					                 "clean: To remove all artifacts that the regular build creates.\n" +
+					                 "version: Shows which meta file standard this compiler works with.\n" +
 					                 "help: To show this message again.\n" +
 					                 "\n");
 					return;
@@ -80,7 +84,7 @@ public class Entry
 		else
 		{
 			Property.load();
-			if (!STANDARD.equals(Property.PARSE_STANDARD.getValue())) Upgrader.upgrade();
+			if (!Version.current().code.equals(Property.PARSE_STANDARD.getValue())) Upgrader.upgrade();
 			Builder.build();
 		}
 	}
