@@ -37,7 +37,11 @@ public class Builder
 	 */
 	public static void build() throws IOException, InterruptedException
 	{
-		if (!DATAPACK_VERSION.getValue().trim().isEmpty()) System.out.print("Version " + DATAPACK_VERSION + "\n");
+		if (DATAPACK_VERSION.getValue() != null &&
+		    !DATAPACK_VERSION.getValue().trim().isEmpty())
+		{
+			System.out.print("Version " + DATAPACK_VERSION + "\n");
+		}
 		System.out.print("Compile level: " + getCompileLevel().name + "\n" +
 		                 "\n");
 		
@@ -69,7 +73,21 @@ public class Builder
 	
 	private static String getDestZipFile()
 	{
-		return (DATAPACK_NAME + " " + DATAPACK_VERSION + getCompileLevel().zipSuffix).trim() + FileExtensions.ZIP;
+		String name = DATAPACK_NAME.getValue();
+		if (name == null)
+		{
+			try
+			{
+				name = new File("./").getCanonicalFile().getName();
+			}
+			catch (IOException e)
+			{
+				name = "datapack";
+			}
+		}
+		String version = DATAPACK_VERSION.getValue();
+		if (version == null) version = "";
+		return (name + " " + version + " " + getCompileLevel().zipSuffix).trim() + FileExtensions.ZIP;
 	}
 	
 	private static File[] getFilesToZip()

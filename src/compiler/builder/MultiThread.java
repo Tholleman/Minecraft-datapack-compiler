@@ -105,7 +105,7 @@ public abstract class MultiThread extends Thread
 		
 		public PackDotMCMetaCreator(String description)
 		{
-			this.description = description;
+			this.description = description != null ? description : "";
 		}
 		
 		@Override

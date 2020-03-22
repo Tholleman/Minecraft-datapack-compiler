@@ -269,7 +269,13 @@ public class Parser
 			while ((last = lastInlineStart(line)) != -1)
 			{
 				int endIndex = firstInlineEnd(line, last);
-				if (endIndex == -1) throw new ParsingException("The " + INLINE_META_PREFIX + " starting on line " + lineCounter + " at position " + (last + 1) + " was not closed with a " + INLINE_META_SUFFIX);
+				if (endIndex == -1)
+				{
+					throw new ParsingException("The " + INLINE_META_PREFIX + " " +
+					                           "starting on line " + lineCounter + " " +
+					                           "at position " + (last + 1) + " " +
+					                           "was not closed with a " + INLINE_META_SUFFIX);
+				}
 				String result = handleInlineMeta(line.substring(last + INLINE_META_PREFIX.length(), endIndex));
 				line = line.substring(0, last) + result + line.substring(endIndex + INLINE_META_SUFFIX.length());
 			}

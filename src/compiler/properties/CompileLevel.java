@@ -19,8 +19,8 @@ public class CompileLevel
 	}
 	
 	public static final CompileLevel PRODUCTION = new CompileLevel("Production", 1, "");
-	public static final CompileLevel DEVELOP = new CompileLevel("Develop", 2, " DEV");
-	public static final CompileLevel VERBOSE = new CompileLevel("Verbose", 3, " VERBOSE");
+	public static final CompileLevel DEVELOP = new CompileLevel("Develop", 2, "DEV");
+	public static final CompileLevel VERBOSE = new CompileLevel("Verbose", 3, "VERBOSE");
 	
-	public static CompileLevel UNKNOWN(int level) {return new CompileLevel("CLevel " + level, level, " CLEVEL_" + level);}
+	public static CompileLevel UNKNOWN(int level) {return new CompileLevel("CLevel " + level, level, "CLEVEL_" + level);}
 }
