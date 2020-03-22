@@ -26,7 +26,7 @@ public enum Property
 	
 	private static final java.util.Properties propertiesLoader = new java.util.Properties();
 	
-	public static void setup()
+	public static void load()
 	{
 		try (FileInputStream fis = new FileInputStream(CONFIG_PATH))
 		{

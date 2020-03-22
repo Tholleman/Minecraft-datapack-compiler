@@ -9,7 +9,6 @@ import compiler.cleaner.Cleaner;
 import compiler.constants.ErrorMessages;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 
@@ -38,8 +37,8 @@ public class Builder
 	 */
 	public static void build() throws IOException, InterruptedException
 	{
-		System.out.print("Version " + DATAPACK_VERSION + "\n" +
-		                 "Compile level: " + getCompileLevel().name + "\n" +
+		if (!DATAPACK_VERSION.getValue().isBlank()) System.out.print("Version " + DATAPACK_VERSION + "\n");
+		System.out.print("Compile level: " + getCompileLevel().name + "\n" +
 		                 "\n");
 		
 		Cleaner.fullClean();
@@ -112,7 +111,7 @@ public class Builder
 		return filled;
 	}
 	
-	private static boolean handleFile(File f) throws FileNotFoundException
+	private static boolean handleFile(File f)
 	{
 		assert f.isFile();
 		

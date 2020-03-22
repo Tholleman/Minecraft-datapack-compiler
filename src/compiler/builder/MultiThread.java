@@ -1,18 +1,22 @@
 package compiler.builder;
 
-import compiler.constants.ErrorMessages;
+import compiler.MultiException;
 import compiler.builder.json.Minify;
 import compiler.builder.parser.Parser;
 import compiler.builder.parser.ParsingException;
+import compiler.constants.ErrorMessages;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.Vector;
 
-import static compiler.constants.ErrorMessages.COULD_NOT_CREATE_PACK_MCMETA;
 import static compiler.FileStrings.PACK_DOT_MCMETA;
+import static compiler.constants.ErrorMessages.COULD_NOT_CREATE_PACK_MCMETA;
 
 public abstract class MultiThread extends Thread
 {
@@ -36,9 +40,7 @@ public abstract class MultiThread extends Thread
 		}
 		if (!failures.isEmpty())
 		{
-			// TODO: cleanly communicate all errors
-			throw new BuildException(failures.size() + " exception" + (failures.size() == 1 ? "" : "s") + ". " +
-			                         "First exception: ", failures.get(0));
+			throw new MultiException(failures);
 		}
 	}
 	
@@ -64,32 +66,35 @@ public abstract class MultiThread extends Thread
 			}
 			catch (ParsingException pEx)
 			{
-				throw new ParsingException(ErrorMessages.AN_ERROR_OCCURRED_WHILE_PARSING(f.getName()), pEx);
+				throw new ParsingException(ErrorMessages.AN_ERROR_OCCURRED_WHILE_PARSING(f.getPath()), pEx);
 			}
 		}
 	}
 	
 	public static class MinifyThread extends MultiThread
 	{
-		private final FileInputStream inputStream;
-		private final FileOutputStream outputStream;
 		
-		public MinifyThread(File input, String output) throws FileNotFoundException
+		
+		private final File input;
+		private final String output;
+		
+		public MinifyThread(File input, String output)
 		{
-			inputStream = new FileInputStream(input);
-			outputStream = new FileOutputStream(new File(output));
+			this.input = input;
+			this.output = output;
 		}
 		
 		@Override
 		public void run()
 		{
-			try
+			try (FileInputStream in = new FileInputStream(input);
+			     FileOutputStream out = new FileOutputStream(new File(output)))
 			{
-				new Minify().minify(inputStream, outputStream);
+				new Minify().minify(in, out);
 			}
 			catch (Exception e)
 			{
-				throw new BuildException(e.getMessage(), e);
+				throw new BuildException(ErrorMessages.AN_ERROR_OCCURRED_WHILE_PARSING(input.getPath()), e);
 			}
 		}
 	}
@@ -128,7 +133,8 @@ public abstract class MultiThread extends Thread
 		private final Path from;
 		private final Path to;
 		
-		public Copy(Path from, Path to) {
+		public Copy(Path from, Path to)
+		{
 			this.from = from;
 			this.to = to;
 		}
