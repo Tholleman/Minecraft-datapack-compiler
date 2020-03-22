@@ -7,7 +7,9 @@ public class ErrorMessages
 	 */
 	private ErrorMessages() {}
 	
-	public static final String COULD_NOT_READ_PROPERTIES_FILE = "Could not read properties file";
+	public static final String COULD_NOT_READ_PROPERTIES_FILE = "Could not read properties file\n" +
+	                                                            "Run this compiler with init or import to create the file.\n" +
+	                                                            "Run this compiler with help for more information";
 	
 	public static String UNKNOWN_READ_ERROR(int line) {return "An unexpected error occurred while reading line " + line;}
 	

@@ -34,7 +34,7 @@ public class Entry
 			}
 			else
 			{
-				System.err.println(indent + e.getMessage());
+				System.err.println(indent + e.getMessage().replaceAll("\\n", "\n" + indent));
 				if (e.getCause() != null) print(e.getCause(), indent + "\t");
 			}
 		}
@@ -61,11 +61,17 @@ public class Entry
 					return;
 				case "help":
 					checkArgumentAmount(args, 0);
-					System.out.println("        Use no argument to build the datapack.\n" +
-					                   "clean : To remove all artifacts that the regular build creates.\n" +
-					                   "init  : To create the framework for a new datapack.\n" +
-					                   "import: To import an existing datapack." +
-					                   "help  : To show this message again.");
+					System.out.print("Compiler arguments\n" +
+					                 "Use no argument to build the datapack.\n" +
+					                 "\n" +
+					                 "Starting out\n" +
+					                 "init: To create the framework for a new datapack.\n" +
+					                 "import: To import an existing datapack.\n" +
+					                 "\n" +
+					                 "Miscellaneous\n" +
+					                 "clean: To remove all artifacts that the regular build creates.\n" +
+					                 "help: To show this message again.\n" +
+					                 "\n");
 					return;
 				default:
 					throw new CompilerException("Unknown argument: \"" + args[0] + "\" use argument \"help\" to see which options you do have.");

@@ -148,7 +148,7 @@ public abstract class MultiThread extends Thread
 			}
 			catch (IOException e)
 			{
-				throw new BuildException("Could not copy", e);
+				throw new BuildException("Could not copy " + from);
 			}
 		}
 	}

@@ -60,7 +60,7 @@ public enum Property
 	
 	public static CompileLevel getCompileLevel()
 	{
-		int level = Integer.parseInt(COMPILE_LEVEL.getValue());
+		int level = COMPILE_LEVEL.getValue() == null ? -1 : Integer.parseInt(COMPILE_LEVEL.getValue());
 		switch (level)
 		{
 			case 1:
@@ -87,6 +87,14 @@ public enum Property
 	public void setValue(String value)
 	{
 		propertiesLoader.setProperty(getKey(), value);
+	}
+	
+	public void setValueWhenEmpty(String value)
+	{
+		if (propertiesLoader.getProperty(getKey()) == null)
+		{
+			propertiesLoader.setProperty(getKey(), value);
+		}
 	}
 	
 	private String safeString()

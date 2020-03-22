@@ -37,7 +37,7 @@ public class Builder
 	 */
 	public static void build() throws IOException, InterruptedException
 	{
-		if (!DATAPACK_VERSION.getValue().isBlank()) System.out.print("Version " + DATAPACK_VERSION + "\n");
+		if (!DATAPACK_VERSION.getValue().trim().isEmpty()) System.out.print("Version " + DATAPACK_VERSION + "\n");
 		System.out.print("Compile level: " + getCompileLevel().name + "\n" +
 		                 "\n");
 		
@@ -80,6 +80,16 @@ public class Builder
 	private static boolean iterate(File f) throws IOException
 	{
 		assert f != null;
+		if (!f.exists())
+		{
+			if (SOURCE_DIRECTORY.equals(f.getPath()))
+			{
+				throw new BuildException(SOURCE_DIRECTORY + " does not exist.\n" +
+				                         "Run this compiler with init or import to create the directory.\n" +
+				                         "Run this compiler with help for more information");
+			}
+			throw new BuildException(f.getPath() + " does not exist.");
+		}
 		if (f.isDirectory())
 		{
 			return handleDirectory(f);

@@ -3,6 +3,7 @@ package compiler.initializer;
 import compiler.Entry;
 import compiler.FileStrings;
 import compiler.properties.Property;
+import compiler.properties.SetupException;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -30,14 +31,23 @@ public class Initialize
 	
 	public static void createConfigFile(String projectName, String description)
 	{
-		DATAPACK_NAME.setValue(projectName);
-		DATAPACK_VERSION.setValue("1.0");
-		DATAPACK_DESCRIPTION.setValue(description);
+		try
+		{
+			Property.load();
+		}
+		catch (SetupException ignored)
+		{
+			// Fails when the file does not exist, this is not a problem
+		}
 		
-		CLEAN_AFTER.setValue("false");
+		DATAPACK_NAME.setValueWhenEmpty(projectName);
+		DATAPACK_VERSION.setValueWhenEmpty("1.0");
+		DATAPACK_DESCRIPTION.setValueWhenEmpty(description);
 		
-		COMPILE_LEVEL.setValue("1");
-		PARSE_STANDARD.setValue(Entry.STANDARD);
+		CLEAN_AFTER.setValueWhenEmpty("false");
+		
+		COMPILE_LEVEL.setValueWhenEmpty("1");
+		PARSE_STANDARD.setValueWhenEmpty(Entry.STANDARD);
 		
 		Property.store();
 	}
