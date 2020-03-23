@@ -180,7 +180,7 @@ public class Parser
 					String line;
 					// Read a line if the next line is still unknown
 					// If the next line is known but it should be skipped, also read the next line
-					if (next == null || useSkipOne())
+					if (next == null || useSkipOne() && next == null)
 					{
 						line = fileToParse.readLine();
 						lineCounter++;
@@ -354,8 +354,14 @@ public class Parser
 			if (!skipOne) return false;
 			
 			skipOne = false;
-			next = null;
-			
+			try
+			{
+				readLine();
+			}
+			catch (ParsingException ignored)
+			{
+				// If the skipped line was in the middle of a multilined command it will throw an error
+			}
 			return true;
 		}
 	}
