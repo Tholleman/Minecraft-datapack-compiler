@@ -129,9 +129,10 @@ public class Parser
 	{
 		if (args.length < 2) throw new ParsingException(NOT_ENOUGH_ARGUMENTS_AT_LEAST(args[0], 2, reader.getLineCounter()));
 		String filePath = inputDir + File.separator + Helper.reattach(line, args[0]);
-		try (BufferedReader br = new BufferedReader(new FileReader(new File(filePath))))
+		File file = new File(filePath);
+		try (BufferedReader br = new BufferedReader(new FileReader(file)))
 		{
-			new Parser(inputDir, br, writer, variables, compileLevel).parse();
+			new Parser(file.getParent(), br, writer, variables, compileLevel).parse();
 		}
 		catch (IOException e)
 		{

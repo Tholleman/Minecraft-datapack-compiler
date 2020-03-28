@@ -73,8 +73,6 @@ public abstract class MultiThread extends Thread
 	
 	public static class MinifyThread extends MultiThread
 	{
-		
-		
 		private final File input;
 		private final String output;
 		
