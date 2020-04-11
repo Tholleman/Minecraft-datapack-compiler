@@ -104,13 +104,13 @@ public class Parser
 				handleCompileLevel(args);
 				break;
 			default:
-				throw new ParsingException(UNKNOWN_LINE_META(args[0], reader.getLineCounter()));
+				throw new ParsingException(UNKNOWN_LINE_META(args[0], reader.getLineStart()));
 		}
 	}
 	
 	private void addVariable(String[] args, String line)
 	{
-		if (args.length < 3) throw new ParsingException(NOT_ENOUGH_ARGUMENTS_AT_LEAST(args[0], 3, reader.getLineCounter()));
+		if (args.length < 3) throw new ParsingException(NOT_ENOUGH_ARGUMENTS_AT_LEAST(args[0], 3, reader.getLineStart()));
 		variables.put(args[1], Helper.reattach(line, args[1]));
 	}
 	
@@ -118,18 +118,18 @@ public class Parser
 	{
 		try
 		{
-			if (args.length != 2) throw new ParsingException(NOT_ENOUGH_ARGUMENTS(args[0], 2, reader.getLineCounter()));
+			if (args.length != 2) throw new ParsingException(NOT_ENOUGH_ARGUMENTS(args[0], 2, reader.getLineStart()));
 			writer.setRepeat(Integer.parseInt(args[1]));
 		}
 		catch (NumberFormatException nfEx)
 		{
-			throw new ParsingException(NOT_A_NUMBER(reader.getLineCounter()), nfEx);
+			throw new ParsingException(NOT_A_NUMBER(reader.getLineStart()), nfEx);
 		}
 	}
 	
 	private void parseFile(String[] args, String line)
 	{
-		if (args.length < 2) throw new ParsingException(NOT_ENOUGH_ARGUMENTS_AT_LEAST(args[0], 2, reader.getLineCounter()));
+		if (args.length < 2) throw new ParsingException(NOT_ENOUGH_ARGUMENTS_AT_LEAST(args[0], 2, reader.getLineStart()));
 		String filePath = inputDir + File.separator + Helper.reattach(line, args[0]);
 		File file = new File(filePath);
 		try (BufferedReader br = new BufferedReader(new FileReader(file)))
@@ -138,20 +138,20 @@ public class Parser
 		}
 		catch (Exception e)
 		{
-			throw new ParsingException(AN_ERROR_OCCURRED_WHILE_PARSING(filePath, reader.getLineCounter()), e);
+			throw new ParsingException(AN_ERROR_OCCURRED_WHILE_PARSING(filePath, reader.getLineStart()), e);
 		}
 	}
 	
 	private void handleCompileLevel(String[] args)
 	{
-		if (args.length != 2) throw new ParsingException(NOT_ENOUGH_ARGUMENTS(args[0], 2, reader.getLineCounter()));
+		if (args.length != 2) throw new ParsingException(NOT_ENOUGH_ARGUMENTS(args[0], 2, reader.getLineStart()));
 		try
 		{
 			if (Integer.parseInt(args[1]) > compileLevel) reader.skipOne();
 		}
 		catch (NumberFormatException nfEx)
 		{
-			throw new ParsingException(NOT_A_NUMBER(reader.getLineCounter()), nfEx);
+			throw new ParsingException(NOT_A_NUMBER(reader.getLineStart()), nfEx);
 		}
 	}
 	
@@ -264,7 +264,7 @@ public class Parser
 			}
 			catch (IOException e)
 			{
-				throw new ParsingException(UNKNOWN_READ_ERROR(getLineCounter()), e);
+				throw new ParsingException(UNKNOWN_READ_ERROR(getLineStart()), e);
 			}
 		}
 		
@@ -333,13 +333,13 @@ public class Parser
 					case DIVIDE:
 						return String.valueOf(Integer.parseInt(args[0]) / Integer.parseInt(args[2]));
 					default:
-						throw new ParsingException(UNKNOWN_OPERATOR(args[1], getLineCounter()));
+						throw new ParsingException(UNKNOWN_OPERATOR(args[1], getLineStart()));
 				}
 			}
-			throw new ParsingException(UNKNOWN_INLINE_META(line, reader.getLineCounter()));
+			throw new ParsingException(UNKNOWN_INLINE_META(line, reader.getLineStart()));
 		}
 		
-		public int getLineCounter()
+		public int getLineStart()
 		{
 			// If next is filled, the amount of lines read is 1 higher, subtract it when asked
 			return lineStart;
