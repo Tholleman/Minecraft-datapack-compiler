@@ -9,6 +9,7 @@ import compiler.scripts.WriteScripts;
 import compiler.upgrader.Upgrader;
 import compiler.upgrader.Version;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -60,56 +61,68 @@ public class Entry
 	public static void main(String[] args) throws IOException, InterruptedException
 	{
 		Thread.currentThread().setUncaughtExceptionHandler(exceptionHandler);
-		if (args != null && args.length > 0)
+		if (args == null || args.length <= 0)
 		{
-			switch (args[0].toLowerCase())
+			if (new File(FileStrings.SOURCE_DIRECTORY).exists())
 			{
-				case "clean":
-					checkArgumentAmount(args, 0);
-					Cleaner.fullClean();
-					return;
-				case "init":
-					checkArgumentAmount(args, 0);
-					Initialize.init();
-					return;
-				case "import":
-					checkArgumentAmount(args, 0);
-					Importer.create();
-					return;
-				case "version":
-					checkArgumentAmount(args, 0);
-					System.out.println("This compiler currently supports " + Version.current().code);
-					return;
-				case "scripts":
-					checkArgumentAmount(args, 1);
-					if (args.length != 2) throw new CompilerException("No script file type given, add sh for unix systems or bat for Windows.");
-					WriteScripts.writeScripts(args[1]);
-					return;
-				case "help":
-					checkArgumentAmount(args, 0);
-					System.out.print("Compiler arguments\n" +
-					                 "Use no argument to build the datapack.\n" +
-					                 "\n" +
-					                 "Starting out\n" +
-					                 "init: To create the framework for a new datapack.\n" +
-					                 "import: To import an existing datapack.\n" +
-					                 "scripts: Create an executable script, has to be run with sh, bat, or any other file extension you want.\n" +
-					                 "\n" +
-					                 "Miscellaneous\n" +
-					                 "clean: To remove all artifacts that the regular build creates.\n" +
-					                 "version: Shows which meta file standard this compiler works with.\n" +
-					                 "help: To show this message again.\n" +
-					                 "\n");
-					return;
-				default:
-					throw new CompilerException("Unknown argument: \"" + args[0] + "\" use argument \"help\" to see which options you do have.");
+				args = new String[]{"build"};
+			}
+			else if (new File(FileStrings.OUTPUT_DIRECTORY).exists())
+			{
+				args = new String[]{"import"};
+			}
+			else
+			{
+				args = new String[]{"init"};
 			}
 		}
-		else
+		switch (args[0].toLowerCase())
 		{
-			Property.load();
-			if (!Version.current().code.equals(Property.PARSE_STANDARD.getValue())) Upgrader.upgrade();
-			Builder.build();
+			case "build":
+				Property.load();
+				if (!Version.current().code.equals(Property.PARSE_STANDARD.getValue())) Upgrader.upgrade();
+				Builder.build();
+				return;
+			case "clean":
+				checkArgumentAmount(args, 0);
+				Cleaner.fullClean();
+				return;
+			case "init":
+				checkArgumentAmount(args, 0);
+				Initialize.init();
+				return;
+			case "import":
+				checkArgumentAmount(args, 0);
+				Importer.create();
+				return;
+			case "version":
+				checkArgumentAmount(args, 0);
+				System.out.println("This compiler currently supports " + Version.current().code);
+				return;
+			case "scripts":
+				checkArgumentAmount(args, 1);
+				if (args.length != 2) throw new CompilerException("No script file type given, add sh for unix systems or bat for Windows.");
+				WriteScripts.writeScripts(args[1]);
+				return;
+			case "help":
+				checkArgumentAmount(args, 0);
+				System.out.print("Compiler arguments\n" +
+				                 "Use no argument to automatically detect what to run between build, import, or init.\n" +
+				                 "Use build to build the datapack.\n" +
+				                 "\n" +
+				                 "Starting out\n" +
+				                 "init: To create the framework for a new datapack.\n" +
+				                 "import: To import an existing datapack.\n" +
+				                 "scripts: Create an executable script, has to be run with sh, bat, or any other file extension you want.\n" +
+				                 "\n" +
+				                 "Miscellaneous\n" +
+				                 "clean: To remove all artifacts that the regular build creates.\n" +
+				                 "version: Shows which meta file standard this compiler works with.\n" +
+				                 "help: To show this message again.\n" +
+				                 "\n");
+				return;
+			default:
+				throw new CompilerException("Unknown argument: \"" + args[0] + "\" use argument \"help\" to see which options you do have.");
 		}
 	}
 	

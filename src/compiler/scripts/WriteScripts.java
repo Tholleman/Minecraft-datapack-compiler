@@ -12,9 +12,7 @@ public class WriteScripts
 	{
 		String executeJar = "java -jar \"" + new File("./").getAbsolutePath() + File.separator + "compiler.jar\"";
 		write("build." + fileExtension, executeJar);
-		write("init." + fileExtension, executeJar + " init");
 		write("clean." + fileExtension, executeJar + " clean");
-		write("import." + fileExtension, executeJar + " import");
 	}
 	
 	private static void write(String fileName, String content) throws IOException

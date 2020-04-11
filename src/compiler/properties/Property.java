@@ -3,8 +3,7 @@ package compiler.properties;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static compiler.FileStrings.CONFIG_PATH;
 import static compiler.constants.ErrorMessages.COULD_NOT_READ_PROPERTIES_FILE;
@@ -55,6 +54,20 @@ public enum Property
 			         + PARSE_STANDARD.safeString() + "\n" +
 			         "\n" +
 			         "# Global Variables\n");
+			List<Property> properties = new ArrayList<>(Arrays.asList(Property.values()));
+			remaining:
+			for (Map.Entry<Object, Object> keyValueEntry : propertiesLoader.entrySet())
+			{
+				for (int i = 0; i < properties.size(); i++)
+				{
+					if (properties.get(i).getKey().equals(keyValueEntry.getKey()))
+					{
+						properties.remove(i);
+						continue remaining;
+					}
+				}
+				fw.write(keyValueEntry.getKey() + "=" + keyValueEntry.getValue() + "\n");
+			}
 		}
 		catch (IOException e)
 		{
