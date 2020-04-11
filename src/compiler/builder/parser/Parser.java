@@ -56,15 +56,15 @@ public class Parser
 	 */
 	public Parser(String inputDir, BufferedReader fileToParse, FileWriter output, Map<String, String> variables)
 	{
-		this(inputDir, fileToParse, new Writer(output), variables);
+		this(inputDir, fileToParse, new Writer(output), new HashMap<>(variables));
 	}
 	
-	private Parser(String inputDir, BufferedReader fileToParse, Writer writer, Map<String, String> variables)
+	private Parser(String inputDir, BufferedReader fileToParse, Writer writer, HashMap<String, String> variables)
 	{
 		this.inputDir = inputDir;
 		reader = new Reader(fileToParse);
 		this.writer = writer;
-		this.variables = new HashMap<>(variables);
+		this.variables = variables;
 		this.compileLevel = Integer.parseInt(variables.get(Property.COMPILE_LEVEL.getKey()));
 	}
 	
