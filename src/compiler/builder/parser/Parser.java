@@ -281,7 +281,7 @@ public class Parser
 					                           "at position " + (last + 1) + " " +
 					                           "was not closed with a " + INLINE_META_SUFFIX);
 				}
-				String result = handleInlineMeta(line.substring(last + INLINE_META_PREFIX.length(), endIndex));
+				String result = replaceInlineMeta(line.substring(last + INLINE_META_PREFIX.length(), endIndex));
 				line = line.substring(0, last) + result + line.substring(endIndex + INLINE_META_SUFFIX.length());
 			}
 			line = line.replace(ESCAPE + INLINE_META_PREFIX, INLINE_META_PREFIX);
@@ -311,7 +311,7 @@ public class Parser
 			return index;
 		}
 		
-		private String handleInlineMeta(String line)
+		private String replaceInlineMeta(String line)
 		{
 			String[] args = splitOnWS(line);
 			if (args.length == 1)
