@@ -152,7 +152,7 @@ public class Builder
 		{
 			if (f.getName().matches(s))
 			{
-				new ParseThread(f, dataVersion(f), getCompileLevel().level).start();
+				new ParseThread(f, dataVersion(f), getVariables()).start();
 				return true;
 			}
 		}

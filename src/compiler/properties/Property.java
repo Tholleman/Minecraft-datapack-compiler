@@ -3,6 +3,8 @@ package compiler.properties;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import static compiler.FileStrings.CONFIG_PATH;
 import static compiler.constants.ErrorMessages.COULD_NOT_READ_PROPERTIES_FILE;
@@ -72,6 +74,16 @@ public enum Property
 			default:
 				return UNKNOWN(level);
 		}
+	}
+	
+	public static Map<String, String> getVariables()
+	{
+		HashMap<String, String> variables = new HashMap<>();
+		for (Map.Entry<Object, Object> keyValueEntry : propertiesLoader.entrySet())
+		{
+			variables.put((String) keyValueEntry.getKey(), (String) keyValueEntry.getValue());
+		}
+		return variables;
 	}
 	
 	public String getKey()

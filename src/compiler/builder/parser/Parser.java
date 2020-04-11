@@ -1,9 +1,11 @@
 package compiler.builder.parser;
 
 import compiler.constants.MetaTags;
+import compiler.properties.Property;
 
 import java.io.*;
 import java.util.HashMap;
+import java.util.Map;
 
 import static compiler.builder.parser.Helper.splitOnWS;
 import static compiler.constants.ErrorMessages.*;
@@ -17,16 +19,16 @@ public class Parser
 	/**
 	 * Parse a file
 	 *
-	 * @param file         The file to parse
-	 * @param outputPath   The path to write to
-	 * @param compileLevel The compile level that lines should have at minimum when clevel is given.
+	 * @param file       The file to parse
+	 * @param outputPath The path to write to
+	 * @param variables  The variables that are started with.
 	 */
-	public static void parse(File file, String outputPath, int compileLevel)
+	public static void parse(File file, String outputPath, Map<String, String> variables)
 	{
 		try (BufferedReader br = new BufferedReader(new FileReader(file));
 		     FileWriter fw = new FileWriter(outputPath))
 		{
-			new Parser(file.getParent(), br, fw, compileLevel).parse();
+			new Parser(file.getParent(), br, fw, variables).parse();
 		}
 		catch (IOException e)
 		{
@@ -45,25 +47,25 @@ public class Parser
 	 * <p>
 	 * Use {@link Parser#parse()} to start parsing the file after instantiating.
 	 * <p>
-	 * Use {@link Parser#parse(File, String, int)} To instantiate and parse immidiatly
+	 * Use {@link Parser#parse(File, String, Map)} To instantiate and parse immediately
 	 *
-	 * @param inputDir     The path to the input directory
-	 * @param fileToParse  The file to parse
-	 * @param output       The path of the file that should be created
-	 * @param compileLevel The compile level that lines should have at minimum when clevel is given.
+	 * @param inputDir    The path to the input directory
+	 * @param fileToParse The file to parse
+	 * @param output      The path of the file that should be created
+	 * @param variables   The variables that are started with
 	 */
-	public Parser(String inputDir, BufferedReader fileToParse, FileWriter output, int compileLevel)
+	public Parser(String inputDir, BufferedReader fileToParse, FileWriter output, Map<String, String> variables)
 	{
-		this(inputDir, fileToParse, new Writer(output), new HashMap<>(), compileLevel);
+		this(inputDir, fileToParse, new Writer(output), variables);
 	}
 	
-	private Parser(String inputDir, BufferedReader fileToParse, Writer writer, HashMap<String, String> variables, int compileLevel)
+	private Parser(String inputDir, BufferedReader fileToParse, Writer writer, Map<String, String> variables)
 	{
 		this.inputDir = inputDir;
 		reader = new Reader(fileToParse);
 		this.writer = writer;
-		this.variables = variables;
-		this.compileLevel = compileLevel;
+		this.variables = new HashMap<>(variables);
+		this.compileLevel = Integer.parseInt(variables.get(Property.COMPILE_LEVEL.getKey()));
 	}
 	
 	/**
@@ -132,7 +134,7 @@ public class Parser
 		File file = new File(filePath);
 		try (BufferedReader br = new BufferedReader(new FileReader(file)))
 		{
-			new Parser(file.getParent(), br, writer, variables, compileLevel).parse();
+			new Parser(file.getParent(), br, writer, variables).parse();
 		}
 		catch (Exception e)
 		{

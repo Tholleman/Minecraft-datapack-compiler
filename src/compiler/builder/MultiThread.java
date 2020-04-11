@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.util.Map;
 import java.util.Vector;
 
 import static compiler.FileStrings.PACK_DOT_MCMETA;
@@ -48,13 +49,13 @@ public abstract class MultiThread extends Thread
 	{
 		public final File f;
 		public final String output;
-		public final int compileLevel;
+		private final Map<String, String> variables;
 		
-		public ParseThread(File f, String output, int compileLevel)
+		public ParseThread(File f, String output, Map<String, String> variables)
 		{
 			this.f = f;
 			this.output = output;
-			this.compileLevel = compileLevel;
+			this.variables = variables;
 		}
 		
 		@Override
@@ -62,7 +63,7 @@ public abstract class MultiThread extends Thread
 		{
 			try
 			{
-				Parser.parse(f, output, compileLevel);
+				Parser.parse(f, output, variables);
 			}
 			catch (ParsingException pEx)
 			{

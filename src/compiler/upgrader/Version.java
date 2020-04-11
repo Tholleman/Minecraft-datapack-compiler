@@ -3,7 +3,8 @@ package compiler.upgrader;
 public enum Version
 {
 	UNKNOWN(null, null),
-	V1_0("Metafile 1.0", null);
+	V1_0("Metafile 1.0", null),
+	V1_1("Metafile 1.1", "Global variables can be added to the config file");
 	
 	public final String code;
 	public final String changelog;
@@ -19,7 +20,7 @@ public enum Version
 		if (code == null) return UNKNOWN;
 		for (Version value : values())
 		{
-			if (value.code.equals(code))
+			if (code.equals(value.code))
 			{
 				return value;
 			}
@@ -29,6 +30,6 @@ public enum Version
 	
 	public static Version current()
 	{
-		return V1_0;
+		return V1_1;
 	}
 }

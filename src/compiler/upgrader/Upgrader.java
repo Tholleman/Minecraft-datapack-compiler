@@ -1,8 +1,10 @@
 package compiler.upgrader;
 
-import compiler.properties.Property;
+import compiler.CompilerException;
+import compiler.FileStrings;
 
 import static compiler.properties.Property.PARSE_STANDARD;
+import static compiler.upgrader.Version.V1_1;
 
 public class Upgrader
 {
@@ -13,8 +15,12 @@ public class Upgrader
 		switch (Version.getVersion(PARSE_STANDARD.getValue()))
 		{
 			case V1_0:
+				System.out.println("Upgrading to 1.1: ");
+				System.out.println(V1_1.changelog);
+				// Technically should check for variables that have the name of a properties key 
+				// but the compiler isn't promoted yet.
+			case V1_1:
 				break;
-			
 			case UNKNOWN:
 			default:
 				unknownCompiler();
@@ -24,8 +30,7 @@ public class Upgrader
 	
 	private static void unknownCompiler()
 	{
-		System.out.println("Unknown compiler, assuming no upgrade is needed");
-		PARSE_STANDARD.setValue(Version.current().code);
-		Property.store();
+		throw new CompilerException("Unknown standard inside " + FileStrings.CONFIG_PATH + ", " +
+		                            "change " + PARSE_STANDARD.getKey() + " to " + Version.current().code);
 	}
 }
