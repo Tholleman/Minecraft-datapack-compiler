@@ -26,11 +26,6 @@ A list of things that can be done to further improve the compiler
     <<name here>> to check if a variable exists
     =
 
-## Passing arguments to a file or inline meta
-
-## Relative file paths
-`..` doesn't currently work.
-
 ## Expand the help
 Calling the program with `help` gives a very minimal manual of the compiler.
 Expanding this to also aid in writing a datapack could be valuable
