@@ -52,7 +52,9 @@ public enum Property
 			         + "# Compiler \n"
 			         + CLEAN_AFTER.safeString() + "\n"
 			         + COMPILE_LEVEL.safeString() + "\n"
-			         + PARSE_STANDARD.safeString());
+			         + PARSE_STANDARD.safeString() + "\n" +
+			         "\n" +
+			         "# Global Variables\n");
 		}
 		catch (IOException e)
 		{
