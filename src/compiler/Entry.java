@@ -8,6 +8,8 @@ import compiler.properties.Property;
 import compiler.upgrader.Upgrader;
 import compiler.upgrader.Version;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 
 public class Entry
@@ -67,6 +69,19 @@ public class Entry
 				case "version":
 					checkArgumentAmount(args, 0);
 					System.out.println("This compiler currently supports " + Version.current().code);
+					return;
+				case "scripts":
+					checkArgumentAmount(args, 1);
+					if (args.length != 2) throw new CompilerException("No script file type given, add sh for unix systems or bat for Windows.");
+					File script = new File("build." + args[1]);
+					try (FileWriter fw = new FileWriter(script))
+					{
+						fw.write("java -jar \"" + script.getAbsoluteFile().getParentFile().getAbsolutePath() + File.separator + "compiler.jar\"");
+					}
+					if (!script.setExecutable(true, true))
+					{
+						System.out.println("Make the file executable");
+					}
 					return;
 				case "help":
 					checkArgumentAmount(args, 0);
