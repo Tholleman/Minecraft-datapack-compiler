@@ -33,8 +33,14 @@ public class Entry
 			}
 			else
 			{
-				System.err.println(indent + e.getMessage().replaceAll("\\n", "\n" + indent));
-				if (e.getCause() != null) print(e.getCause(), indent + "\t");
+				String exceptionType = e.getClass().getSimpleName() + ": ";
+				StringBuilder newIndent = new StringBuilder(indent);
+				for (int i = 0; i < exceptionType.length(); i++)
+				{
+					newIndent.append(' ');
+				}
+				System.err.println(indent + exceptionType + e.getMessage().replaceAll("\\n", "\n" + newIndent));
+				if (e.getCause() != null) print(e.getCause(), "\t" + indent);
 			}
 		}
 	};
@@ -70,6 +76,7 @@ public class Entry
 					                 "Starting out\n" +
 					                 "init: To create the framework for a new datapack.\n" +
 					                 "import: To import an existing datapack.\n" +
+					                 "scripts: Create an executable script, has to be run with sh, bat, or any other file extension you want.\n" +
 					                 "\n" +
 					                 "Miscellaneous\n" +
 					                 "clean: To remove all artifacts that the regular build creates.\n" +

@@ -134,7 +134,7 @@ public class Parser
 		{
 			new Parser(file.getParent(), br, writer, variables, compileLevel).parse();
 		}
-		catch (IOException e)
+		catch (Exception e)
 		{
 			throw new ParsingException(AN_ERROR_OCCURRED_WHILE_PARSING(filePath, reader.getLineCounter()), e);
 		}
@@ -157,6 +157,7 @@ public class Parser
 	{
 		private final BufferedReader fileToParse;
 		private int lineCounter = 0;
+		private int lineStart;
 		private boolean meta;
 		private boolean skipOne;
 		private String next;
@@ -235,6 +236,7 @@ public class Parser
 						line = next;
 						next = null;
 					}
+					lineStart = lineCounter;
 					line = parseInlineMeta(line);
 					
 					// Now that the line is read and known to not be part of a previous line, identify it as a meta or command line
@@ -280,6 +282,7 @@ public class Parser
 				String result = handleInlineMeta(line.substring(last + INLINE_META_PREFIX.length(), endIndex));
 				line = line.substring(0, last) + result + line.substring(endIndex + INLINE_META_SUFFIX.length());
 			}
+			line = line.replace(ESCAPE + INLINE_META_PREFIX, INLINE_META_PREFIX);
 			return line;
 		}
 		
@@ -312,7 +315,7 @@ public class Parser
 			if (args.length == 1)
 			{
 				String variableValue = variables.get((args[0]));
-				if (variableValue == null) throw new ParsingException(UNKNOWN_VARIABLE(args[0], reader.getLineCounter()));
+				if (variableValue == null) throw new ParsingException(UNKNOWN_VARIABLE(args[0], reader.lineCounter));
 				return variableValue;
 			}
 			if (args.length == 3)
@@ -337,7 +340,7 @@ public class Parser
 		public int getLineCounter()
 		{
 			// If next is filled, the amount of lines read is 1 higher, subtract it when asked
-			return lineCounter + (next == null ? 0 : 1);
+			return lineStart;
 		}
 		
 		public boolean isMeta()

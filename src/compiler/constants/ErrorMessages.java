@@ -33,7 +33,7 @@ public class ErrorMessages
 	
 	public static String AN_ERROR_OCCURRED_WHILE_PARSING(String fileName) {return "An unexpected error occurred while reading file \"" + fileName + "\"";}
 	
-	public static String AN_ERROR_OCCURRED_WHILE_PARSING(String fileName, int line) {return AN_ERROR_OCCURRED_WHILE_PARSING(fileName) + " on line " + line;}
+	public static String AN_ERROR_OCCURRED_WHILE_PARSING(String fileName, int line) {return AN_ERROR_OCCURRED_WHILE_PARSING(fileName) + " from line " + line;}
 	
 	public static final String UNEXPECTED_ERROR_WHILE_INITIALIZING = "An unexpected error occurred while initializing";
 	
