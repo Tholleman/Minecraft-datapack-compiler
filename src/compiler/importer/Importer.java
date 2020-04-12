@@ -1,8 +1,8 @@
 package compiler.importer;
 
-import compiler.initializer.Initialize;
 import compiler.FileStrings;
 import compiler.constants.Identifiers;
+import compiler.initializer.Initialize;
 import org.json.JSONObject;
 
 import java.io.*;
@@ -71,6 +71,7 @@ public class Importer
 			String line;
 			while ((line = br.readLine()) != null)
 			{
+				line = line.replace("<<", "^<<");
 				if (line.trim().isEmpty() ||
 				    line.startsWith(Identifiers.COMMENT_PREFIX) ||
 				    line.startsWith(Identifiers.COMMAND_PREFIX))
