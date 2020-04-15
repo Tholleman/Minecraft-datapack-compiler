@@ -1,20 +1,20 @@
 package compiler.builder;
 
 import compiler.FileStrings;
-import compiler.builder.MultiThread.MinifyThread;
-import compiler.builder.MultiThread.PackDotMCMetaCreator;
-import compiler.builder.MultiThread.ParseThread;
+import compiler.builder.threads.CopyThread;
+import compiler.builder.threads.MinifyThread;
+import compiler.builder.threads.PackDotMCMetaCreator;
+import compiler.builder.threads.ParseThread;
 import compiler.builder.zipper.Zipper;
 import compiler.cleaner.Cleaner;
 import compiler.constants.ErrorMessages;
+import compiler.multi_thread.MultiThreadHandler;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
 import static compiler.FileStrings.*;
-import static compiler.builder.MultiThread.Copy;
-import static compiler.builder.MultiThread.rejoin;
 import static compiler.properties.Property.*;
 
 /**
@@ -37,19 +37,20 @@ public class Builder
 	 */
 	public static void build() throws IOException, InterruptedException
 	{
+		MultiThreadHandler threadHandler = new MultiThreadHandler();
 		Cleaner.fullClean();
 		System.out.println("Removed artifacts from previous build");
 		
-		boolean createdDataDirectory = iterate(new File(SOURCE_DIRECTORY));
+		boolean createdDataDirectory = iterate(new File(SOURCE_DIRECTORY), threadHandler);
 		if (!createdDataDirectory)
 		{
 			System.out.println("The data source directory was empty (or only filled with files that are ignored)");
 			return;
 		}
-		new PackDotMCMetaCreator(DATAPACK_DESCRIPTION.getValue()).start();
+		threadHandler.run(new PackDotMCMetaCreator(DATAPACK_DESCRIPTION.getValue()));
 		File[] toZip = getFilesToZip();
 		
-		rejoin();
+		threadHandler.join();
 		
 		System.out.println("All files inside \"" + SOURCE_DIRECTORY + "\" are now parsed and ready to be used");
 		
@@ -85,7 +86,7 @@ public class Builder
 		return new File[]{new File(PACK_DOT_MCMETA), new File(OUTPUT_DIRECTORY)};
 	}
 	
-	private static boolean iterate(File f) throws IOException
+	private static boolean iterate(File f, MultiThreadHandler threadHandler) throws IOException
 	{
 		assert f != null;
 		if (!f.exists())
@@ -100,12 +101,12 @@ public class Builder
 		}
 		if (f.isDirectory())
 		{
-			return handleDirectory(f);
+			return handleDirectory(f, threadHandler);
 		}
-		return handleFile(f);
+		return handleFile(f, threadHandler);
 	}
 	
-	private static boolean handleDirectory(File f) throws IOException
+	private static boolean handleDirectory(File f, MultiThreadHandler threadHandler) throws IOException
 	{
 		File dataVersion = new File(dataVersion(f));
 		if (!dataVersion.exists() && !dataVersion.mkdir())
@@ -119,7 +120,7 @@ public class Builder
 		assert files != null;
 		for (File file : files)
 		{
-			filled = iterate(file) || filled;
+			filled = iterate(file, threadHandler) || filled;
 		}
 		
 		if (!filled)
@@ -129,7 +130,7 @@ public class Builder
 		return filled;
 	}
 	
-	private static boolean handleFile(File f)
+	private static boolean handleFile(File f, MultiThreadHandler threadHandler)
 	{
 		assert f.isFile();
 		
@@ -142,18 +143,18 @@ public class Builder
 		{
 			if (f.getName().matches(s))
 			{
-				new ParseThread(f, dataVersion(f), getVariables()).start();
+				threadHandler.run(new ParseThread(f, dataVersion(f), getVariables()));
 				return true;
 			}
 		}
 		
 		if (f.getName().endsWith(FileExtensions.JSON))
 		{
-			new MinifyThread(f, dataVersion(f)).start();
+			threadHandler.run(new MinifyThread(f, dataVersion(f)));
 			return true;
 		}
 		
-		new Copy(f.toPath(), new File(dataVersion(f)).toPath()).start();
+		threadHandler.run(new CopyThread(f.toPath(), new File(dataVersion(f)).toPath()));
 		return true;
 	}
 	

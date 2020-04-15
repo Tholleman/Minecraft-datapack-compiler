@@ -4,6 +4,7 @@ import compiler.builder.Builder;
 import compiler.cleaner.Cleaner;
 import compiler.importer.Importer;
 import compiler.initializer.Initialize;
+import compiler.multi_thread.MultiThreadHandler;
 import compiler.properties.Property;
 import compiler.scripts.WriteScripts;
 import compiler.upgrader.Upgrader;
@@ -16,12 +17,12 @@ import java.nio.file.Files;
 
 public class Entry
 {
-	private static final Thread.UncaughtExceptionHandler exceptionHandler = new Thread.UncaughtExceptionHandler()
+	private static final Thread.UncaughtExceptionHandler exceptionHandler = MultiThreadHandler.multiExceptionHandler(new Thread.UncaughtExceptionHandler()
 	{
 		@Override
 		public void uncaughtException(Thread t, Throwable e)
 		{
-			try (FileWriter fileWriter = new FileWriter("Error.txt"))
+			try (FileWriter fileWriter = new FileWriter("Error.txt", true))
 			{
 				print(e, "", fileWriter);
 			}
@@ -34,30 +35,18 @@ public class Entry
 		private void print(Throwable e, String indent, FileWriter fileWriter) throws IOException
 		{
 			if (e == null) return;
-			if (e instanceof MultiException)
+			String exceptionType = e.getClass().getSimpleName() + ": ";
+			StringBuilder newIndent = new StringBuilder(indent);
+			for (int i = 0; i < exceptionType.length(); i++)
 			{
-				for (Throwable exception : ((MultiException) e).getExceptions())
-				{
-					print(exception, indent, fileWriter);
-					fileWriter.write("\n");
-					System.err.println();
-				}
+				newIndent.append(' ');
 			}
-			else
-			{
-				String exceptionType = e.getClass().getSimpleName() + ": ";
-				StringBuilder newIndent = new StringBuilder(indent);
-				for (int i = 0; i < exceptionType.length(); i++)
-				{
-					newIndent.append(' ');
-				}
-				String toWrite = indent + exceptionType + e.getMessage().replaceAll("\\n", "\n" + newIndent);
-				System.err.println(toWrite);
-				fileWriter.write(toWrite + "\n");
-				if (e.getCause() != null) print(e.getCause(), "\t" + indent, fileWriter);
-			}
+			String toWrite = indent + exceptionType + e.getMessage().replaceAll("\\n", "\n" + newIndent);
+			System.err.println(toWrite);
+			fileWriter.write(toWrite + "\n");
+			if (e.getCause() != null) print(e.getCause(), "\t" + indent, fileWriter);
 		}
-	};
+	});
 	
 	public static void main(String[] args) throws IOException, InterruptedException
 	{
