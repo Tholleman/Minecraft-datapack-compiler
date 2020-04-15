@@ -1,8 +1,10 @@
 package compiler.multi_thread;
 
-public class ExceptionInfo
+import java.io.Serializable;
+
+public class ExceptionInfo implements Serializable
 {
-	public final Thread t;
+	public final transient Thread t;
 	public final Throwable e;
 	
 	public ExceptionInfo(Thread t, Throwable e)
