@@ -41,21 +41,22 @@ public class Initialize
 		}
 		
 		DATAPACK_NAME.setValueWhenEmpty(projectName);
-		DATAPACK_VERSION.setValueWhenEmpty("1.0");
 		DATAPACK_DESCRIPTION.setValueWhenEmpty(description);
 		
 		CLEAN_AFTER.setValueWhenEmpty("false");
 		
-		COMPILE_LEVEL.setValueWhenEmpty("1");
 		PARSE_STANDARD.setValueWhenEmpty(Version.current().code);
+		
+		Property.add("dev", "true");
 		
 		Property.store();
 	}
 	
 	private static void createDataSource(String projectName) throws IOException
 	{
+		String nameSpace = projectName.replaceAll("\\s+", "_");
 		new Dir(FileStrings.SOURCE_DIRECTORY,
-		        new Dir(projectName,
+		        new Dir(nameSpace,
 		                new Dir("advancements"),
 		                new Dir("functions"),
 		                new Dir("loot_tables"),
@@ -77,15 +78,36 @@ public class Initialize
 		{
 			mcLoadCreator.write(("{\n" +
 			                     "    \"values\": [\n" +
-			                     "        \"" + projectName + ":load\"\n" +
+			                     "        \"" + nameSpace + ":load\"\n" +
 			                     "    ]\n" +
 			                     "}").getBytes());
 		}
 		
-		try (FileOutputStream ownLoadCreator = new FileOutputStream(new File(SOURCE_DIRECTORY + separator + projectName + separator + "functions" + File.separator + "load.mcfunction")))
+		try (FileOutputStream ownLoadCreator = new FileOutputStream(new File(SOURCE_DIRECTORY + separator + nameSpace + separator + "functions" + File.separator + "load.mcfunction")))
 		{
-			ownLoadCreator.write(("\\clevel 2\n" +
-			                      "/tellraw @a \"" + projectName + " is loaded\"").getBytes());
+			ownLoadCreator.write(("\\if <<dev>>\n" +
+			                      "/tellraw @a \"<<" + DATAPACK_NAME.getKey() + ">> is loaded\"").getBytes());
+		}
+		
+		try (FileOutputStream ownLoadCreator = new FileOutputStream(new File(SOURCE_DIRECTORY + separator + nameSpace + separator + "functions" + File.separator + "uninstall.mcfunction")))
+		{
+			ownLoadCreator.write(("# Remove any scoreboards here\n" +
+			                      "\n" +
+			                      "# Disable the datapack\n" +
+			                      "\\var successStorage uninstallSuccess\n" +
+			                      "/scoreboard objectives add <<successStorage>> dummy\n" +
+			                      "/execute store result score @s <<successStorage>> run datapack disable \"file/<<DATAPACK_NAME>>.zip\"\n" +
+			                      "/tellraw @s[scores={<<successStorage>>=0}] {\n" +
+			                      "\t\"text\":\"Disable/remove the zip file to uninstall\",\n" +
+			                      "\t\"italic\":true,\n" +
+			                      "\t\"color\":\"red\"\n" +
+			                      "}\n" +
+			                      "/tellraw @s[scores={<<successStorage>>=1..}] {\n" +
+			                      "\t\"text\":\"The datapack is disabled but should be removed to completely uninstall\",\n" +
+			                      "\t\"italic\":true,\n" +
+			                      "\t\"color\":\"green\"\n" +
+			                      "}\n" +
+			                      "/scoreboard objectives remove <<successStorage>>").getBytes());
 		}
 	}
 	

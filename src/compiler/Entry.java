@@ -12,6 +12,7 @@ import compiler.upgrader.Version;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
 
 public class Entry
 {
@@ -60,6 +61,11 @@ public class Entry
 	
 	public static void main(String[] args) throws IOException, InterruptedException
 	{
+		File error = new File("Error.txt");
+		if (error.exists() && error.isFile())
+		{
+			Files.delete(error.toPath());
+		}
 		Thread.currentThread().setUncaughtExceptionHandler(exceptionHandler);
 		if (args == null || args.length <= 0)
 		{
@@ -80,8 +86,14 @@ public class Entry
 		{
 			case "build":
 				Property.load();
-				if (!Version.current().code.equals(Property.PARSE_STANDARD.getValue())) Upgrader.upgrade();
-				Builder.build();
+				if (!Version.current().code.equals(Property.PARSE_STANDARD.getValue()))
+				{
+					Upgrader.upgrade();
+				}
+				else
+				{
+					Builder.build();
+				}
 				return;
 			case "clean":
 				checkArgumentAmount(args, 0);

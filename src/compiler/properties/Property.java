@@ -7,7 +7,6 @@ import java.util.*;
 
 import static compiler.FileStrings.CONFIG_PATH;
 import static compiler.constants.ErrorMessages.COULD_NOT_READ_PROPERTIES_FILE;
-import static compiler.properties.CompileLevel.*;
 
 /**
  * Supplier for the properties of a datapack
@@ -17,12 +16,10 @@ import static compiler.properties.CompileLevel.*;
 public enum Property
 {
 	DATAPACK_NAME,
-	DATAPACK_VERSION,
 	DATAPACK_DESCRIPTION,
 	
 	CLEAN_AFTER,
 	
-	COMPILE_LEVEL,
 	PARSE_STANDARD;
 	
 	private static final java.util.Properties propertiesLoader = new java.util.Properties();
@@ -45,12 +42,10 @@ public enum Property
 		{
 			fw.write("# Datapack data\n"
 			         + DATAPACK_NAME.safeString() + "\n"
-			         + DATAPACK_VERSION.safeString() + "\n"
 			         + DATAPACK_DESCRIPTION.safeString() + "\n"
 			         + "\n"
 			         + "# Compiler \n"
 			         + CLEAN_AFTER.safeString() + "\n"
-			         + COMPILE_LEVEL.safeString() + "\n"
 			         + PARSE_STANDARD.safeString() + "\n" +
 			         "\n" +
 			         "# Global Variables\n");
@@ -75,20 +70,9 @@ public enum Property
 		}
 	}
 	
-	public static CompileLevel getCompileLevel()
+	public static void add(String key, String value)
 	{
-		int level = COMPILE_LEVEL.getValue() == null ? -1 : Integer.parseInt(COMPILE_LEVEL.getValue());
-		switch (level)
-		{
-			case 1:
-				return PRODUCTION;
-			case 2:
-				return DEVELOP;
-			case 3:
-				return VERBOSE;
-			default:
-				return UNKNOWN(level);
-		}
+		propertiesLoader.put(key, value);
 	}
 	
 	public static Map<String, String> getVariables()
@@ -109,11 +93,6 @@ public enum Property
 	public String getValue()
 	{
 		return propertiesLoader.getProperty(getKey());
-	}
-	
-	public void setValue(String value)
-	{
-		propertiesLoader.setProperty(getKey(), value);
 	}
 	
 	public void setValueWhenEmpty(String value)

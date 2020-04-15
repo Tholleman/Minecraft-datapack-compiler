@@ -37,14 +37,6 @@ public class Builder
 	 */
 	public static void build() throws IOException, InterruptedException
 	{
-		if (DATAPACK_VERSION.getValue() != null &&
-		    !DATAPACK_VERSION.getValue().trim().isEmpty())
-		{
-			System.out.print("Version " + DATAPACK_VERSION + "\n");
-		}
-		System.out.print("Compile level: " + getCompileLevel().name + "\n" +
-		                 "\n");
-		
 		Cleaner.fullClean();
 		System.out.println("Removed artifacts from previous build");
 		
@@ -85,9 +77,7 @@ public class Builder
 				name = "datapack";
 			}
 		}
-		String version = DATAPACK_VERSION.getValue();
-		if (version == null) version = "";
-		return (name + " " + version + " " + getCompileLevel().zipSuffix).trim() + FileExtensions.ZIP;
+		return name + FileExtensions.ZIP;
 	}
 	
 	private static File[] getFilesToZip()

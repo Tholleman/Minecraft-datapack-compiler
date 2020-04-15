@@ -20,4 +20,20 @@ public class Identifiers
 	public static final String MINUS = "-";
 	public static final String DIVIDE = "/";
 	public static final String MULTIPLY = "*";
+	
+	public static final String TRUE = "true";
+	public static final String FALSE = "false";
+	public static final String EXISTS = "exists";
+	public static final String AND = "&&";
+	public static final String OR = "||";
+	public static final String NOT = "NOT";
+	
+	public static final String EQUALS = "==";
+	
+	public static final String GT = ">";
+	public static final String GE1 = ">=";
+	public static final String GE2 = "=>";
+	public static final String ST = "<";
+	public static final String SE1 = "<=";
+	public static final String SE2 = "=<";
 }

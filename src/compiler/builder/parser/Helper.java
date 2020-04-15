@@ -34,4 +34,18 @@ class Helper
 	{
 		return line.substring(line.indexOf(after) + after.length() + 1);
 	}
+	
+	public static String[] subArray(String[] array, int startAt)
+	{
+		return subArray(array, startAt, array.length);
+	}
+	
+	public static String[] subArray(String[] array, int startAt, int endAt)
+	{
+		assert endAt > startAt;
+		int newLength = endAt - startAt;
+		String[] argsNoIf = new String[newLength];
+		System.arraycopy(array, startAt, argsNoIf, 0, newLength);
+		return argsNoIf;
+	}
 }

@@ -4,7 +4,8 @@ public enum Version
 {
 	UNKNOWN(null, null),
 	V1_0("Metafile 1.0", null),
-	V1_1("Metafile 1.1", "Global variables can be added to the config file");
+	V1_1("Metafile 1.1", "Global variables can be added to the config file"),
+	V1_2("Metafile 1.2", "If statements and no more \\clevel");
 	
 	public final String code;
 	public final String changelog;
@@ -30,6 +31,6 @@ public enum Version
 	
 	public static Version current()
 	{
-		return V1_1;
+		return V1_2;
 	}
 }

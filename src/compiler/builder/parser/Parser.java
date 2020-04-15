@@ -1,7 +1,6 @@
 package compiler.builder.parser;
 
 import compiler.constants.MetaTags;
-import compiler.properties.Property;
 
 import java.io.*;
 import java.util.HashMap;
@@ -40,7 +39,6 @@ public class Parser
 	private final Reader reader;
 	private final Writer writer;
 	private final HashMap<String, String> variables;
-	private final int compileLevel;
 	
 	/**
 	 * Constructor of a parser object.
@@ -65,7 +63,6 @@ public class Parser
 		reader = new Reader(fileToParse);
 		this.writer = writer;
 		this.variables = variables;
-		this.compileLevel = Integer.parseInt(variables.get(Property.COMPILE_LEVEL.getKey()));
 	}
 	
 	/**
@@ -100,8 +97,8 @@ public class Parser
 			case MetaTags.FILE:
 				parseFile(args, line);
 				break;
-			case MetaTags.COMPILE_LEVEL:
-				handleCompileLevel(args);
+			case MetaTags.IF:
+				handleIf(args);
 				break;
 			default:
 				throw new ParsingException(UNKNOWN_LINE_META(args[0], reader.getLineStart()));
@@ -111,7 +108,7 @@ public class Parser
 	private void addVariable(String[] args, String line)
 	{
 		if (args.length < 3) throw new ParsingException(NOT_ENOUGH_ARGUMENTS_AT_LEAST(args[0], 3, reader.getLineStart()));
-		variables.put(args[1], Helper.reattach(line, args[1]));
+		variables.put(args[1], Helper.reattach(line.substring(args[0].length()), args[1]));
 	}
 	
 	private void repeatNextLine(String[] args)
@@ -142,16 +139,14 @@ public class Parser
 		}
 	}
 	
-	private void handleCompileLevel(String[] args)
+	private void handleIf(String[] args)
 	{
-		if (args.length != 2) throw new ParsingException(NOT_ENOUGH_ARGUMENTS(args[0], 2, reader.getLineStart()));
-		try
+		assert args[0].equals(MetaTags.IF);
+		
+		BooleanConverter converter = new BooleanConverter(variables, reader.getLineStart());
+		if (!converter.replaceBoolean(Helper.subArray(args, 1)))
 		{
-			if (Integer.parseInt(args[1]) > compileLevel) reader.skipOne();
-		}
-		catch (NumberFormatException nfEx)
-		{
-			throw new ParsingException(NOT_A_NUMBER(reader.getLineStart()), nfEx);
+			reader.skipOne();
 		}
 	}
 	
@@ -276,10 +271,7 @@ public class Parser
 				int endIndex = firstInlineEnd(line, last);
 				if (endIndex == -1)
 				{
-					throw new ParsingException("The " + INLINE_META_PREFIX + " " +
-					                           "starting on line " + lineCounter + " " +
-					                           "at position " + (last + 1) + " " +
-					                           "was not closed with a " + INLINE_META_SUFFIX);
+					throw new ParsingException(UNCLOSED_INLINE_META(lineCounter, last));
 				}
 				String result = replaceInlineMeta(line.substring(last + INLINE_META_PREFIX.length(), endIndex));
 				line = line.substring(0, last) + result + line.substring(endIndex + INLINE_META_SUFFIX.length());
