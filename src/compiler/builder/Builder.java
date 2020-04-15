@@ -9,6 +9,7 @@ import compiler.builder.zipper.Zipper;
 import compiler.cleaner.Cleaner;
 import compiler.constants.ErrorMessages;
 import compiler.multi_thread.MultiThreadHandler;
+import compiler.properties.Property;
 
 import java.io.File;
 import java.io.IOException;
@@ -48,19 +49,21 @@ public class Builder
 			return;
 		}
 		threadHandler.run(new PackDotMCMetaCreator(DATAPACK_DESCRIPTION.getValue()));
-		File[] toZip = getFilesToZip();
 		
 		threadHandler.join();
-		
 		System.out.println("All files inside \"" + SOURCE_DIRECTORY + "\" are now parsed and ready to be used");
 		
-		Zipper.zip(toZip, getDestZipFile());
-		System.out.println("The datapack is now a .zip file and ready to be distributed");
-		
-		if (Boolean.parseBoolean(CLEAN_AFTER.getValue()))
+		if (Boolean.parseBoolean(Property.ZIP.getValue()))
 		{
-			Cleaner.postClean();
-			System.out.println("\nRemoved artifacts that aren't the final zip");
+			File[] toZip = getFilesToZip();
+			Zipper.zip(toZip, getDestZipFile());
+			System.out.println("The datapack is now a .zip file and ready to be distributed");
+			
+			if (Boolean.parseBoolean(CLEAN_AFTER.getValue()))
+			{
+				Cleaner.postClean();
+				System.out.println("\nRemoved artifacts that aren't the final zip");
+			}
 		}
 	}
 	

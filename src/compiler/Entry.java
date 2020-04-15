@@ -14,6 +14,9 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.List;
+
+import static compiler.constants.ErrorMessages.MISSING_PROPERTIES;
 
 public class Entry
 {
@@ -58,18 +61,7 @@ public class Entry
 		Thread.currentThread().setUncaughtExceptionHandler(exceptionHandler);
 		if (args == null || args.length <= 0)
 		{
-			if (new File(FileStrings.SOURCE_DIRECTORY).exists())
-			{
-				args = new String[]{"build"};
-			}
-			else if (new File(FileStrings.OUTPUT_DIRECTORY).exists())
-			{
-				args = new String[]{"import"};
-			}
-			else
-			{
-				args = new String[]{"init"};
-			}
+			args = setAuto();
 		}
 		switch (args[0].toLowerCase())
 		{
@@ -81,6 +73,11 @@ public class Entry
 				}
 				else
 				{
+					List<Property> missing = Property.check();
+					if (!missing.isEmpty())
+					{
+						throw new CompilerException(MISSING_PROPERTIES(missing));
+					}
 					Builder.build();
 				}
 				return;
@@ -125,6 +122,24 @@ public class Entry
 			default:
 				throw new CompilerException("Unknown argument: \"" + args[0] + "\" use argument \"help\" to see which options you do have.");
 		}
+	}
+	
+	private static String[] setAuto()
+	{
+		String[] args;
+		if (new File(FileStrings.SOURCE_DIRECTORY).exists())
+		{
+			args = new String[]{"build"};
+		}
+		else if (new File(FileStrings.OUTPUT_DIRECTORY).exists())
+		{
+			args = new String[]{"import"};
+		}
+		else
+		{
+			args = new String[]{"init"};
+		}
+		return args;
 	}
 	
 	private static void checkArgumentAmount(String[] args, int max)

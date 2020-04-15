@@ -1,5 +1,9 @@
 package compiler.constants;
 
+import compiler.properties.Property;
+
+import java.util.List;
+
 import static compiler.constants.Identifiers.*;
 
 public class ErrorMessages
@@ -56,4 +60,20 @@ public class ErrorMessages
 	public static String NOT_TRUE_OR_FALSE(String line, int lineCounter) {return "\"" + line + "\" is not " + TRUE + " or " + FALSE + " on line " + lineCounter;}
 	
 	public static String FAILED_BOOLEAN_OP(String operator, int lineCounter) {return "Could not handle the boolean operator " + operator + " on line " + lineCounter;}
+	
+	public static String MISSING_PROPERTIES(List<Property> missing)
+	{
+		if (missing.size() > 1)
+		{
+			StringBuilder list = new StringBuilder(missing.get(0).getKey());
+			int i = 1;
+			for (; i < missing.size() - 1; i++)
+			{
+				list.append(", ").append(missing.get(i).getKey());
+			}
+			list.append(" and ").append(missing.get(i).getKey());
+			return "Missing properties: " + list;
+		}
+		return "Missing property: " + missing.get(0).getKey();
+	}
 }

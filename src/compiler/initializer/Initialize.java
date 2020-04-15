@@ -43,9 +43,9 @@ public class Initialize
 		DATAPACK_NAME.setValueWhenEmpty(projectName);
 		DATAPACK_DESCRIPTION.setValueWhenEmpty(description);
 		
-		CLEAN_AFTER.setValueWhenEmpty("false");
-		
 		PARSE_STANDARD.setValueWhenEmpty(Version.current().code);
+		ZIP.setValueWhenEmpty("true");
+		CLEAN_AFTER.setValueWhenEmpty("false");
 		
 		Property.add("dev", "true");
 		

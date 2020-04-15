@@ -18,9 +18,9 @@ public enum Property
 	DATAPACK_NAME,
 	DATAPACK_DESCRIPTION,
 	
-	CLEAN_AFTER,
-	
-	PARSE_STANDARD;
+	PARSE_STANDARD,
+	ZIP,
+	CLEAN_AFTER;
 	
 	private static final java.util.Properties propertiesLoader = new java.util.Properties();
 	
@@ -36,6 +36,19 @@ public enum Property
 		}
 	}
 	
+	public static List<Property> check()
+	{
+		List<Property> missing = new ArrayList<>();
+		for (Property value : Property.values())
+		{
+			if (!propertiesLoader.containsKey(value.getKey()))
+			{
+				missing.add(value);
+			}
+		}
+		return missing;
+	}
+	
 	public static void store()
 	{
 		try (FileWriter fw = new FileWriter(CONFIG_PATH))
@@ -45,9 +58,10 @@ public enum Property
 			         + DATAPACK_DESCRIPTION.safeString() + "\n"
 			         + "\n"
 			         + "# Compiler \n"
+			         + PARSE_STANDARD.safeString() + "\n"
+			         + ZIP.safeString() + "\n"
 			         + CLEAN_AFTER.safeString() + "\n"
-			         + PARSE_STANDARD.safeString() + "\n" +
-			         "\n" +
+			         + "\n" +
 			         "# Global Variables\n");
 			List<Property> properties = new ArrayList<>(Arrays.asList(Property.values()));
 			remaining:
