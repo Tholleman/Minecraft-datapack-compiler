@@ -94,7 +94,6 @@ public class Importer
 				builder.append(line);
 			}
 		}
-		//TODO: creating a specialized JSON parser would remove ~60 kB from the jar
 		return new JSONObject(builder.toString()).getJSONObject("pack");
 	}
 }
