@@ -20,6 +20,7 @@ public enum Property
 	PACK_FORMAT,
 	
 	PARSE_STANDARD,
+	BLACKLIST,
 	ZIP,
 	CLEAN_AFTER;
 	
@@ -61,6 +62,7 @@ public enum Property
 			         + "\n"
 			         + "# Compiler \n"
 			         + PARSE_STANDARD.safeString() + "\n"
+			         + BLACKLIST.safeString() + "\n"
 			         + ZIP.safeString() + "\n"
 			         + CLEAN_AFTER.safeString() + "\n"
 			         + "\n" +

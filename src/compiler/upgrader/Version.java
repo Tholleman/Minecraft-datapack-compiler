@@ -7,7 +7,9 @@ public enum Version
 	V1_1("Metafile 1.1", "Global variables can be added to the config file"),
 	V1_2("Metafile 1.2", "If statements and no more \\clevel", "Change \\clevel to \\if <<COMPILE_LEVEL>> =="),
 	V1_3("Metafile 1.3", "Zipping is now optional", "Add \"ZIP=true\" to config.properties"),
-	V1_4("Metafile 1.4", "Made pack format a variable", "Add \"PACK_FORMAT=5\" to config.properties"),
+	V1_4("Metafile 1.4", "Made pack format and blacklist a variable",
+	     "Add \"PACK_FORMAT=5\" to config.properties",
+	     "Add \"BLACKLIST=.*\\.txt, .*\\.md\" to config.properties"),
 	;
 	
 	public final String code;

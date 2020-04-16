@@ -18,23 +18,14 @@ public class Importer
 	
 	public static void create() throws IOException
 	{
-		if (new File(SOURCE_DIRECTORY).exists())
-		{
-			System.out.println(SOURCE_DIRECTORY + " already exists");
-			return;
-		}
+		// Checks
+		if (new File(SOURCE_DIRECTORY).exists()) throw new ImportException(SOURCE_DIRECTORY + " already exists");
 		File existingSources = new File(OUTPUT_DIRECTORY);
-		if (!existingSources.exists())
-		{
-			System.out.println("No data directory found");
-			return;
-		}
+		if (!existingSources.exists()) throw new ImportException("No data directory found");
 		File mcMeta = new File(FileStrings.PACK_DOT_MCMETA);
-		if (!mcMeta.exists() || !mcMeta.isFile())
-		{
-			System.out.println("pack.mcmeta could not be found");
-			return;
-		}
+		if (!mcMeta.exists() || !mcMeta.isFile()) throw new ImportException("pack.mcmeta could not be found");
+		
+		// Import
 		copy(existingSources);
 		String description = extractDescription(mcMeta);
 		Initialize.createConfigFile(new File("./").getCanonicalFile().getName(), description);
@@ -51,16 +42,15 @@ public class Importer
 			{
 				copy(listFile);
 			}
-			return;
 		}
-		
-		if (file.getName().endsWith(".mcfunction"))
+		else if (file.getName().endsWith(FileStrings.FileExtensions.MCFUNCTION))
 		{
 			importFunctionFile(file);
-			return;
 		}
-		
-		Files.copy(file.toPath(), new File(getSourceVersion(file)).toPath(), StandardCopyOption.REPLACE_EXISTING);
+		else
+		{
+			Files.copy(file.toPath(), new File(getSourceVersion(file)).toPath(), StandardCopyOption.REPLACE_EXISTING);
+		}
 	}
 	
 	private static void importFunctionFile(File file) throws IOException
@@ -71,7 +61,7 @@ public class Importer
 			String line;
 			while ((line = br.readLine()) != null)
 			{
-				line = line.replace("<<", "^<<");
+				line = line.replace(Identifiers.INLINE_META_PREFIX, Identifiers.ESCAPE + Identifiers.INLINE_META_PREFIX);
 				if (line.trim().isEmpty() ||
 				    line.startsWith(Identifiers.COMMENT_PREFIX) ||
 				    line.startsWith(Identifiers.COMMAND_PREFIX))

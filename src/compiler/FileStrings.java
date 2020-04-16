@@ -48,16 +48,6 @@ public class FileStrings
 	}
 	
 	/**
-	 * Files that should be ignored from the data source directory
-	 */
-	public static String[] zipBlackList()
-	{
-		return new String[]{".*\\" + FileExtensions.MCTEMPLATE,
-		                    ".*\\" + FileExtensions.MARKDOWN,
-		                    ".*\\" + FileExtensions.TEXT};
-	}
-	
-	/**
 	 * Files that should be parsed from the data source directory
 	 */
 	public static String[] parseWhiteList() {return new String[]{".*\\" + FileExtensions.MCFUNCTION};}

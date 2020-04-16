@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import static compiler.FileStrings.CONFIG_PATH;
 import static compiler.FileStrings.SOURCE_DIRECTORY;
 import static compiler.properties.Property.*;
 import static java.io.File.separator;
@@ -22,6 +23,7 @@ public class Initialize
 		String projectName = new File("./").getCanonicalFile().getName();
 		createConfigFile(projectName);
 		createDataSource(projectName);
+		System.out.println("Created " + SOURCE_DIRECTORY + " and " + CONFIG_PATH);
 	}
 	
 	private static void createConfigFile(String projectName)
@@ -45,6 +47,7 @@ public class Initialize
 		PACK_FORMAT.setValueWhenEmpty("5");
 		
 		PARSE_STANDARD.setValueWhenEmpty(Version.current().code);
+		BLACKLIST.setValueWhenEmpty(".*\\\\.txt, .*\\\\.md");
 		ZIP.setValueWhenEmpty("true");
 		CLEAN_AFTER.setValueWhenEmpty("false");
 		

@@ -137,9 +137,9 @@ public class Builder
 	{
 		assert f.isFile();
 		
-		for (String s : zipBlackList())
+		for (String s : BLACKLIST.getValue().split(","))
 		{
-			if (f.getName().matches(s)) return false;
+			if (f.getName().matches(s.trim())) return false;
 		}
 		
 		for (String s : parseWhiteList())

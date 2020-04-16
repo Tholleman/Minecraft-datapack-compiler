@@ -13,6 +13,7 @@ public class WriteScripts
 		String executeJar = "java -jar \"" + new File("./").getAbsolutePath() + File.separator + "compiler.jar\"";
 		write("build." + fileExtension, executeJar);
 		write("clean." + fileExtension, executeJar + " clean");
+		System.out.println("Scripts are created");
 	}
 	
 	private static void write(String fileName, String content) throws IOException
