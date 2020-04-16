@@ -1,5 +1,7 @@
 package compiler;
 
+import compiler.upgrader.Version;
+
 /**
  * Central reference for things related to files.
  */
@@ -26,6 +28,11 @@ public class FileStrings
 	 * Path to the pack.mcmeta file
 	 */
 	public static final String PACK_DOT_MCMETA = "pack.mcmeta";
+	
+	/**
+	 * Path to the cheat sheet file
+	 */
+	public static final String RFC = Version.current().code + ".md";
 	
 	/**
 	 * Grouping of the file extensions that are used.

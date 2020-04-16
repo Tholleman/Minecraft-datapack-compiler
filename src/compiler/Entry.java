@@ -112,12 +112,16 @@ public class Entry
 				                 "init: To create the framework for a new datapack.\n" +
 				                 "import: To import an existing datapack.\n" +
 				                 "scripts: Create an executable script, has to be run with sh, bat, or any other file extension you want.\n" +
+				                 "rfc: Make a cheat sheet about how to code in " + Version.current().code + "\n" +
 				                 "\n" +
 				                 "Miscellaneous\n" +
 				                 "clean: To remove all artifacts that the regular build creates.\n" +
 				                 "version: Shows which meta file standard this compiler works with.\n" +
 				                 "help: To show this message again.\n" +
 				                 "\n");
+				return;
+			case "rfc":
+				Help.cheatSheet();
 				return;
 			default:
 				throw new CompilerException("Unknown argument: \"" + args[0] + "\" use argument \"help\" to see which options you do have.");

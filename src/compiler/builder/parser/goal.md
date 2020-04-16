@@ -1,14 +1,17 @@
 ## Behaviour
-A directory will be copied with all of the files inside of it.
+A directory will be copied with all the files inside of it.
 - Empty lines are removed.
 - a line spread over multiple lines are combined (continues until terminated with a `;`)
 - Meta tags are acted on
 
 ## Lines
 There are 3 kinds of lines in a file
-- An output line which ends with a ;
+- An output line which starts with a `/`
 - A meta tag which describes how to deal with following output line(s)
 - A comment which starts with a #
+  - test
+  - test
+  - test
 
 ## Acceptable meta tags
 ### Inline meta tags
