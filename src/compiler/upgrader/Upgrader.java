@@ -26,7 +26,10 @@ public class Upgrader
 				result.append(V1_2.toPrint()).append("\n\n");
 				// fallthrough
 			case V1_2:
-				result.append(V1_3.toPrint()).append("\n");
+				result.append(V1_3.toPrint()).append("\n\n");
+				// fallthrough
+			case V1_3:
+				result.append(V1_4.toPrint()).append("\n");
 				break;
 			case UNKNOWN:
 			default:

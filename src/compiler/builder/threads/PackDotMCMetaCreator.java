@@ -12,10 +12,12 @@ import static compiler.constants.ErrorMessages.COULD_NOT_CREATE_PACK_MCMETA;
 public class PackDotMCMetaCreator extends Thread
 {
 	private final String description;
+	private final String packFormat;
 	
-	public PackDotMCMetaCreator(String description)
+	public PackDotMCMetaCreator(String description, String packFormat)
 	{
 		this.description = description != null ? description : "";
+		this.packFormat = packFormat != null ? packFormat : "5";
 	}
 	
 	@Override
@@ -25,7 +27,7 @@ public class PackDotMCMetaCreator extends Thread
 		{
 			fileOutputStream.write(("{" +
 			                        "\"pack\":{" +
-			                        "\"pack_format\":5," +
+			                        "\"pack_format\":" + packFormat + "," +
 			                        "\"description\":\"" + description + "\"" +
 			                        "}" +
 			                        "}").getBytes());

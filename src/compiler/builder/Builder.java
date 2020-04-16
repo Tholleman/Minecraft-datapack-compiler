@@ -48,7 +48,7 @@ public class Builder
 			System.out.println("The data source directory was empty (or only filled with files that are ignored)");
 			return;
 		}
-		threadHandler.run(new PackDotMCMetaCreator(DATAPACK_DESCRIPTION.getValue()));
+		threadHandler.run(new PackDotMCMetaCreator(DATAPACK_DESCRIPTION.getValue(), PACK_FORMAT.getValue()));
 		
 		threadHandler.join();
 		System.out.println("All files inside \"" + SOURCE_DIRECTORY + "\" are now parsed and ready to be used");

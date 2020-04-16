@@ -42,6 +42,7 @@ public class Initialize
 		
 		DATAPACK_NAME.setValueWhenEmpty(projectName);
 		DATAPACK_DESCRIPTION.setValueWhenEmpty(description);
+		PACK_FORMAT.setValueWhenEmpty("5");
 		
 		PARSE_STANDARD.setValueWhenEmpty(Version.current().code);
 		ZIP.setValueWhenEmpty("true");
