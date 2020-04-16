@@ -28,10 +28,10 @@ public enum Version
 		StringBuilder steps = new StringBuilder();
 		for (String upgradeStep : upgradeSteps)
 		{
-			steps.append("- ").append(upgradeStep);
+			steps.append("- ").append(upgradeStep).append('\n');
 		}
 		return code + ": " + changelog + "\n" +
-		       steps;
+		       steps.toString().trim();
 	}
 	
 	public static Version getVersion(String code)
