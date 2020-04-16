@@ -27,8 +27,10 @@ public class Importer
 		
 		// Import
 		copy(existingSources);
-		String description = extractDescription(mcMeta);
-		Initialize.createConfigFile(new File("./").getCanonicalFile().getName(), description);
+		JSONObject pack = getPack(mcMeta);
+		Initialize.createConfigFile(new File("./").getCanonicalFile().getName(),
+		                            pack.getString("description"),
+		                            pack.getString("pack_format"));
 	}
 	
 	private static void copy(File file) throws IOException
@@ -81,7 +83,7 @@ public class Importer
 		return file.getPath().replaceFirst(OUTPUT_DIRECTORY, SOURCE_DIRECTORY);
 	}
 	
-	private static String extractDescription(File mcMeta) throws IOException
+	private static JSONObject getPack(File mcMeta) throws IOException
 	{
 		StringBuilder builder = new StringBuilder();
 		try (BufferedReader reader = new BufferedReader(new FileReader(mcMeta)))
@@ -93,6 +95,6 @@ public class Importer
 			}
 		}
 		//TODO: creating a specialized JSON parser would remove ~60 kB from the jar
-		return new JSONObject(builder.toString()).getJSONObject("pack").getString("description");
+		return new JSONObject(builder.toString()).getJSONObject("pack");
 	}
 }
