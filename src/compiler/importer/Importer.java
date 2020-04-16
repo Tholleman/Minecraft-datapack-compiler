@@ -30,7 +30,7 @@ public class Importer
 		JSONObject pack = getPack(mcMeta);
 		Initialize.createConfigFile(new File("./").getCanonicalFile().getName(),
 		                            pack.getString("description"),
-		                            pack.getString("pack_format"));
+		                            pack.getInt("pack_format"));
 	}
 	
 	private static void copy(File file) throws IOException
