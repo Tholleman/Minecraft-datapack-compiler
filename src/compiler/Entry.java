@@ -10,9 +10,7 @@ import compiler.scripts.WriteScripts;
 import compiler.upgrader.Upgrader;
 import compiler.upgrader.Version;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.util.List;
 
@@ -66,6 +64,7 @@ public class Entry
 		switch (args[0].toLowerCase())
 		{
 			case "build":
+				checkArgumentAmount(args, 0);
 				Property.load();
 				if (!Version.current().code.equals(Property.PARSE_STANDARD.getValue()))
 				{
@@ -104,25 +103,20 @@ public class Entry
 				return;
 			case "help":
 				checkArgumentAmount(args, 0);
-				System.out.print("Compiler arguments\n" +
-				                 "Use no argument to automatically detect what to run between build, import, or init.\n" +
-				                 "Use build to build the datapack.\n" +
-				                 "\n" +
-				                 "Starting out\n" +
-				                 "init: To create the framework for a new datapack.\n" +
-				                 "import: To import an existing datapack.\n" +
-				                 "scripts: Create an executable script, has to be run with sh, bat, or any other file extension you want.\n" +
-				                 "rfc: Make a cheat sheet about how to code in " + Version.current().code + "\n" +
-				                 "\n" +
-				                 "Miscellaneous\n" +
-				                 "clean: To remove all artifacts that the regular build creates.\n" +
-				                 "version: Shows which meta file standard this compiler works with.\n" +
-				                 "help: To show this message again.\n" +
-				                 "\n");
+				printFile("Help.txt");
 				return;
 			case "rfc":
+				checkArgumentAmount(args, 0);
 				Help.cheatSheet();
 				return;
+			case "license":
+				checkArgumentAmount(args, 0);
+				printFile("License.txt");
+				break;
+			case "credits":
+				checkArgumentAmount(args, 0);
+				printFile("Credits.txt");
+				break;
 			default:
 				throw new CompilerException("Unknown argument: \"" + args[0] + "\" use argument \"help\" to see which options you do have.");
 		}
@@ -149,5 +143,17 @@ public class Entry
 	private static void checkArgumentAmount(String[] args, int max)
 	{
 		if (args.length - 1 > max) throw new CompilerException("Too many arguments for " + args[0]);
+	}
+	
+	private static void printFile(String path) throws IOException
+	{
+		try (BufferedReader br = new BufferedReader(new InputStreamReader(Entry.class.getResourceAsStream(path))))
+		{
+			String line;
+			while ((line = br.readLine()) != null)
+			{
+				System.out.println(line);
+			}
+		}
 	}
 }

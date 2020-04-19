@@ -1,0 +1,18 @@
+Compiler arguments
+Use no argument to automatically detect what to run between build, import, or init.
+
+Starting out
+init: To create the framework for a new datapack.
+import: To import an existing datapack.
+scripts: Create an executable script, has to be run with sh, bat, or any other file extension you want.
+rfc: Make a cheat sheet about how to code in Metafile 1.4
+
+Normal use
+build: to build the datapack.
+clean: To remove all artifacts that the regular build creates.
+
+Miscellaneous
+version: Shows which meta file standard this compiler works with.
+credits: To see who worked on this project.
+license: Print the MIT license
+help: To show this message again.
