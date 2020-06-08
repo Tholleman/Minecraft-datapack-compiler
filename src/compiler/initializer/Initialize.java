@@ -58,7 +58,7 @@ public class Initialize
 	
 	private static void createDataSource(String projectName) throws IOException
 	{
-		String nameSpace = projectName.replaceAll("\\s+", "_");
+		String nameSpace = projectName.replaceAll("\\s+", "_").toLowerCase();
 		new Dir(FileStrings.SOURCE_DIRECTORY,
 		        new Dir(nameSpace,
 		                new Dir("advancements"),
