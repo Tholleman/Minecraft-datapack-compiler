@@ -86,6 +86,10 @@ public class Builder
 	
 	private static File[] getFilesToZip()
 	{
+		if (ZIP_INCLUDE.getValue().trim().isEmpty())
+		{
+			return new File[]{new File(PACK_DOT_MCMETA), new File(OUTPUT_DIRECTORY)};
+		}
 		String[] extraFileNames = ZIP_INCLUDE.getValue().split(",");
 		File[] files = new File[extraFileNames.length + 2];
 		files[0] = new File(PACK_DOT_MCMETA);
