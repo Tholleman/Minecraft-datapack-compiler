@@ -63,8 +63,9 @@ public class Importer
 			String line;
 			while ((line = br.readLine()) != null)
 			{
-				line = line.replace(Identifiers.INLINE_META_PREFIX, Identifiers.ESCAPE + Identifiers.INLINE_META_PREFIX);
-				if (line.trim().isEmpty() ||
+				line = line.replace(Identifiers.INLINE_META_PREFIX, Identifiers.ESCAPE + Identifiers.INLINE_META_PREFIX)
+				           .trim();
+				if (line.isEmpty() ||
 				    line.startsWith(Identifiers.COMMENT_PREFIX) ||
 				    line.startsWith(Identifiers.COMMAND_PREFIX))
 				{
