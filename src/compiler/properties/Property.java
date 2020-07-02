@@ -17,6 +17,7 @@ public enum Property
 {
 	DATAPACK_NAME,
 	DATAPACK_DESCRIPTION,
+	ZIP_INCLUDE,
 	PACK_FORMAT,
 	
 	PARSE_STANDARD,
@@ -58,6 +59,7 @@ public enum Property
 			fw.write("# Datapack data\n"
 			         + DATAPACK_NAME.safeString() + "\n"
 			         + DATAPACK_DESCRIPTION.safeString() + "\n"
+			         + ZIP_INCLUDE.safeString() + "\n"
 			         + PACK_FORMAT.safeString() + "\n"
 			         + "\n"
 			         + "# Compiler \n"

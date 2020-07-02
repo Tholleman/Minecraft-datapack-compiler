@@ -10,6 +10,8 @@ public enum Version
 	V1_4("Metafile 1.4", "Made pack format and blacklist a variable",
 	     "Add \"PACK_FORMAT=5\" to config.properties",
 	     "Add \"BLACKLIST=.*\\.txt, .*\\.md\" to config.properties"),
+	V1_5("Metafile 1.5", "Adding other files to the zip is now possible",
+	     "Add \"ZIP_INCLUDE=\" to config.properties"),
 	;
 	
 	public final String code;
@@ -49,6 +51,6 @@ public enum Version
 	
 	public static Version current()
 	{
-		return V1_4;
+		return V1_5;
 	}
 }

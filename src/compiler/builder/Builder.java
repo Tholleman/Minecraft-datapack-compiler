@@ -86,7 +86,17 @@ public class Builder
 	
 	private static File[] getFilesToZip()
 	{
-		return new File[]{new File(PACK_DOT_MCMETA), new File(OUTPUT_DIRECTORY)};
+		String[] extraFileNames = ZIP_INCLUDE.getValue().split(",");
+		File[] files = new File[extraFileNames.length + 2];
+		files[0] = new File(PACK_DOT_MCMETA);
+		files[1] = new File(OUTPUT_DIRECTORY);
+		int nextIndex = 2;
+		for (String extraFileName : extraFileNames)
+		{
+			files[nextIndex] = new File(extraFileName);
+			nextIndex++;
+		}
+		return files;
 	}
 	
 	private static boolean iterate(File f, MultiThreadHandler threadHandler) throws IOException

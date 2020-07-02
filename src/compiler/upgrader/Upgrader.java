@@ -29,7 +29,13 @@ public class Upgrader
 				result.append(V1_3.toPrint()).append("\n\n");
 				// fallthrough
 			case V1_3:
-				result.append(V1_4.toPrint()).append("\n");
+				result.append(V1_4.toPrint()).append("\n\n");
+				// fallthrough
+			case V1_4:
+				result.append(V1_5.toPrint()).append("\n");
+				// fallthrough
+			case V1_5:
+				assert V1_5 == current();
 				break;
 			case UNKNOWN:
 			default:
