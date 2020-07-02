@@ -9,8 +9,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 
-import static compiler.FileStrings.OUTPUT_DIRECTORY;
-import static compiler.FileStrings.SOURCE_DIRECTORY;
+import static compiler.FileStrings.*;
 
 public class Importer
 {
@@ -18,11 +17,12 @@ public class Importer
 	
 	public static void create() throws IOException
 	{
+		String extraFiles = listExtraFiles();
 		// Checks
 		if (new File(SOURCE_DIRECTORY).exists()) throw new ImportException(SOURCE_DIRECTORY + " already exists");
 		File existingSources = new File(OUTPUT_DIRECTORY);
 		if (!existingSources.exists()) throw new ImportException("No data directory found");
-		File mcMeta = new File(FileStrings.PACK_DOT_MCMETA);
+		File mcMeta = new File(PACK_DOT_MCMETA);
 		if (!mcMeta.exists() || !mcMeta.isFile()) throw new ImportException("pack.mcmeta could not be found");
 		
 		// Import
@@ -30,7 +30,46 @@ public class Importer
 		JSONObject pack = getPack(mcMeta);
 		Initialize.createConfigFile(new File("./").getCanonicalFile().getName(),
 		                            pack.getString("description"),
-		                            pack.getInt("pack_format"));
+		                            pack.getInt("pack_format"),
+		                            extraFiles);
+	}
+	
+	private static String listExtraFiles()
+	{
+		StringBuilder output = new StringBuilder();
+		File[] files = new File(".").listFiles();
+		assert files != null;
+		for (File file : files)
+		{
+			if (file.isFile())
+			{
+				if (notAnExtraFile(file)) continue;
+				output.append(file.getName()).append(",");
+			}
+			else if (!file.getName().equals(OUTPUT_DIRECTORY))
+			{
+				output.append(file.getName()).append(",");
+			}
+		}
+		String result = output.toString();
+		if (result.length() > 0) result = result.substring(0, result.length() - 1);
+		return result;
+	}
+	
+	private static boolean notAnExtraFile(File file)
+	{
+		if (file.getName().endsWith(PACK_DOT_MCMETA))
+		{
+			return true;
+		}
+		for (String script : FileExtensions.SCRIPTS())
+		{
+			if (file.getName().endsWith(script))
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	private static void copy(File file) throws IOException
