@@ -28,10 +28,10 @@ public class Initialize
 	
 	private static void createConfigFile(String projectName)
 	{
-		createConfigFile(projectName, "", 5);
+		createConfigFile(projectName, "", 5, "");
 	}
 	
-	public static void createConfigFile(String projectName, String description, int format)
+	public static void createConfigFile(String projectName, String description, int format, String extraFiles)
 	{
 		try
 		{
@@ -45,6 +45,7 @@ public class Initialize
 		DATAPACK_NAME.setValueWhenEmpty(projectName);
 		DATAPACK_DESCRIPTION.setValueWhenEmpty(description);
 		PACK_FORMAT.setValueWhenEmpty("" + format);
+		ZIP_INCLUDE.setValueWhenEmpty(extraFiles);
 		
 		PARSE_STANDARD.setValueWhenEmpty(Version.current().code);
 		BLACKLIST.setValueWhenEmpty(".*\\\\.txt, .*\\\\.md");

@@ -47,11 +47,7 @@ public class FileStrings
 		
 		public static final String MCFUNCTION = ".mcfunction";
 		
-		public static final String MCTEMPLATE = ".mctemplate";
-		
-		public static final String MARKDOWN = ".md";
-		
-		public static final String TEXT = ".txt";
+		public static String[] SCRIPTS() {return new String[]{".sh", ".bat", ".cmd", ".jar"};}
 	}
 	
 	/**
