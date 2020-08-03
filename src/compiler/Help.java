@@ -35,14 +35,13 @@ public class Help
 			         "For variables\n" +
 			         "\n" +
 			         "#### `" + INLINE_META_PREFIX + "# operator #" + INLINE_META_SUFFIX + "`\n" +
-			         "To perform a operation integer number operation.\n" +
+			         "To perform an integer number operation.\n" +
 			         "\n" +
 			         "Valid operators are: `+`, `-`, `*`, and `/`\n" +
 			         "\n" +
 			         "### Line meta tags\n" +
 			         "#### `\\" + FILE + " #`\n" +
 			         "Will read a file as if the lines are written in the current file.\n" +
-			         "Can be used to set up default variables or go the other way and fill a template.\n" +
 			         "\n" +
 			         "#### `\\" + REPEAT + " #`\n" +
 			         "Repeat the next line `#` times.\n" +
@@ -53,14 +52,14 @@ public class Help
 			         "Set a variable to be used later\n" +
 			         "\n" +
 			         "#### `\\" + IF + " #`\n" +
-			         "Will parse the next file if boolean expression is true.\n" +
+			         "Will parse the next line if the boolean expression is true.\n" +
 			         "##### Boolean expressions\n" +
 			         "- `" + TRUE + "` or `" + FALSE + "`\n" +
 			         "- `" + EXISTS + " #` to check if a variable has a value (use the actual identifier, not `" + INLINE_META_PREFIX + "identifier" + INLINE_META_SUFFIX + "`)\n" +
 			         "- `" + NOT + " #` to invert a boolean expression.\n" +
 			         "- `# " + AND + " #` to check two boolean expressions.\n" +
 			         "- `# " + OR + " #` to check at least one boolean expression.\n" +
-			         "- `# " + EQUALS + " #` to \n" +
+			         "- `# " + EQUALS + " #` to check if the two sides are the same\n" +
 			         "- `# operator #`\n" +
 			         "  - `" + GT + "`\n" +
 			         "  - `" + GE1 + "` or `" + GE2 + "`\n" +
