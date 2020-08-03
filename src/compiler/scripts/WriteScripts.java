@@ -1,5 +1,7 @@
 package compiler.scripts;
 
+import compiler.FileStrings;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -11,7 +13,23 @@ public class WriteScripts
 	public static void writeScripts(String fileExtension) throws IOException
 	{
 		String executeJar = "java -jar \"" + new File("./").getAbsolutePath() + File.separator + "compiler.jar\"";
-		write("build." + fileExtension, executeJar);
+		String passArgument = null;
+		switch (fileExtension)
+		{
+			case FileStrings.FileExtensions.SH:
+				passArgument = " $1";
+				break;
+			case FileStrings.FileExtensions.BAT:
+			case FileStrings.FileExtensions.CMD:
+				passArgument = " %1";
+				break;
+			default:
+				passArgument = "";
+				break;
+		}
+		// assertion for future development
+		assert passArgument != null;
+		write("build." + fileExtension, executeJar + passArgument);
 		write("clean." + fileExtension, executeJar + " clean");
 		System.out.println("Scripts are created");
 	}
@@ -25,7 +43,7 @@ public class WriteScripts
 		}
 		if (!script.setExecutable(true, true))
 		{
-			System.out.println("Make the file executable");
+			System.out.println("Make " + fileName + " executable");
 		}
 	}
 }

@@ -5,7 +5,7 @@ Starting out
 init: To create the framework for a new datapack.
 import: To import an existing datapack.
 scripts: Create an executable script, has to be run with sh, bat, or any other file extension you want.
-rfc: Make a cheat sheet about how to code in Metafile 1.4
+rfc: Make a cheat sheet about how to code in Metafile 1.5
 
 Normal use
 build: to build the datapack.

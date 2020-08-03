@@ -47,7 +47,11 @@ public class FileStrings
 		
 		public static final String MCFUNCTION = ".mcfunction";
 		
-		public static String[] SCRIPTS() {return new String[]{".sh", ".bat", ".cmd", ".jar"};}
+		public static final String SH = "sh";
+		public static final String BAT = "bat";
+		public static final String CMD = "cmd";
+		
+		public static String[] SCRIPTS() {return new String[]{"." + SH, "." + BAT, "." + CMD, ".jar"};}
 	}
 	
 	/**
