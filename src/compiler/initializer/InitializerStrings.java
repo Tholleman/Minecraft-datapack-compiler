@@ -14,4 +14,6 @@ public class InitializerStrings extends compiler.FileStrings
 	public static final String ERROR_CREATE_DIR = "Could not create directory %s";
 	public static final String ERROR_UNKNOWN_FILE_TYPE = "\"%s\" is not a directory or file";
 	public static final String ERROR_COPY = "Could not copy %s to %s";
+	
+	public static String[] doNotParse() {return new String[]{".png"};}
 }

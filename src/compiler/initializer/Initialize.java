@@ -6,6 +6,7 @@ import compiler.upgrader.Version;
 
 import java.io.*;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
 import java.text.MessageFormat;
 
 import static compiler.initializer.InitializerStrings.*;
@@ -93,6 +94,21 @@ public class Initialize
 	
 	private static void fileTemplateCopy(File toCopy, File copy, String namespace, String name)
 	{
+		for (String fileType : doNotParse())
+		{
+			if (toCopy.getName().endsWith(fileType))
+			{
+				try
+				{
+					Files.copy(toCopy.toPath(), copy.toPath());
+				}
+				catch (IOException e)
+				{
+					throw new InitializeException(String.format(ERROR_COPY, toCopy.getName(), copy.getName()), e);
+				}
+				return;
+			}
+		}
 		try (BufferedReader reader = new BufferedReader(new FileReader(toCopy));
 		     FileWriter writer = new FileWriter(copy))
 		{
