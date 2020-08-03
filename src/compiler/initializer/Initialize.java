@@ -1,34 +1,116 @@
 package compiler.initializer;
 
-import compiler.FileStrings;
 import compiler.properties.Property;
 import compiler.properties.SetupException;
 import compiler.upgrader.Version;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
+import java.net.URISyntaxException;
+import java.text.MessageFormat;
 
-import static compiler.FileStrings.CONFIG_PATH;
-import static compiler.FileStrings.SOURCE_DIRECTORY;
+import static compiler.initializer.InitializerStrings.*;
 import static compiler.properties.Property.*;
 import static java.io.File.separator;
 
 public class Initialize
 {
-	private Initialize() {}
+	private final String projectName;
+	private final String namespace;
 	
-	public static void init() throws IOException
+	private Initialize()
 	{
-		String projectName = new File("./").getCanonicalFile().getName();
-		createConfigFile(projectName);
-		createDataSource(projectName);
-		System.out.println("Created " + SOURCE_DIRECTORY + " and " + CONFIG_PATH);
+		try
+		{
+			projectName = new File("./").getCanonicalFile().getName();
+			namespace = projectName.trim().replaceAll("\\s+", "_").toLowerCase();
+		}
+		catch (IOException e)
+		{
+			throw new InitializeException(COULD_NOT_GET_PROJECT_NAME, e);
+		}
 	}
 	
-	private static void createConfigFile(String projectName)
+	public static void init()
 	{
-		createConfigFile(projectName, "", 5, "");
+		new Initialize().followTemplate();
+	}
+	
+	private void followTemplate()
+	{
+		try
+		{
+			File parentDir = new File(Initialize.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParentFile();
+			File[] files = parentDir.listFiles();
+			assert files != null;
+			for (File file : files)
+			{
+				if (file.getName().equals(TEMPLATE_DIR_NAME) && file.isDirectory())
+				{
+					File[] toCopy = file.listFiles();
+					assert toCopy != null;
+					for (File child : toCopy)
+					{
+						templateCopy(child, projectName, "." + separator);
+					}
+					createConfigFile(projectName, "", 5, "");
+					return;
+				}
+			}
+			throw new InitializeException(MessageFormat.format(ERROR_NO_TEMPLATE_FOUND, parentDir.getPath()));
+		}
+		catch (URISyntaxException e)
+		{
+			throw new InitializeException(ERROR_NO_OWN_DIR, e);
+		}
+	}
+	
+	private void templateCopy(File toCopy, String projectName, String path)
+	{
+		String pathname = path + separator + replaceKeywords(toCopy.getName(), namespace, projectName);
+		File copy = new File(pathname);
+		if (toCopy.isDirectory())
+		{
+			if (!copy.mkdir())
+			{
+				throw new InitializeException(String.format(ERROR_CREATE_DIR, copy.getName()));
+			}
+			File[] files = toCopy.listFiles();
+			assert files != null;
+			for (File childToCopy : files)
+			{
+				templateCopy(childToCopy, projectName, pathname);
+			}
+		}
+		else if (toCopy.isFile())
+		{
+			fileTemplateCopy(toCopy, copy, namespace, projectName);
+		}
+		else
+		{
+			throw new InitializeException(String.format(ERROR_UNKNOWN_FILE_TYPE, toCopy.getName()));
+		}
+	}
+	
+	private static void fileTemplateCopy(File toCopy, File copy, String namespace, String name)
+	{
+		try (BufferedReader reader = new BufferedReader(new FileReader(toCopy));
+		     FileWriter writer = new FileWriter(copy))
+		{
+			String line;
+			while ((line = reader.readLine()) != null)
+			{
+				writer.write(replaceKeywords(line + System.lineSeparator(), namespace, name));
+			}
+		}
+		catch (IOException ioe)
+		{
+			throw new InitializeException(String.format(ERROR_COPY, toCopy.getName(), copy.getName()), ioe);
+		}
+	}
+	
+	private static String replaceKeywords(String todo, String namespace, String name)
+	{
+		return todo.replace(NAMESPACE_KEY, namespace).replace(NAME_KEY, name);
 	}
 	
 	public static void createConfigFile(String projectName, String description, int format, String extraFiles)
@@ -55,101 +137,5 @@ public class Initialize
 		Property.add("dev", "true");
 		
 		Property.store();
-	}
-	
-	private static void createDataSource(String projectName) throws IOException
-	{
-		String nameSpace = projectName.replaceAll("\\s+", "_").toLowerCase();
-		new Dir(FileStrings.SOURCE_DIRECTORY,
-		        new Dir(nameSpace,
-		                new Dir("advancements"),
-		                new Dir("functions"),
-		                new Dir("loot_tables"),
-		                new Dir("predicates"),
-		                new Dir("recipes"),
-		                new Dir("structures"),
-		                new Dir("tags",
-		                        new Dir("blocks"),
-		                        new Dir("entity_types"),
-		                        new Dir("fluids"),
-		                        new Dir("functions"),
-		                        new Dir("items"))),
-		        new Dir("minecraft",
-		                new Dir("tags",
-		                        new Dir("functions"))))
-				.create();
-		
-		try (FileOutputStream mcLoadCreator = new FileOutputStream(new File(SOURCE_DIRECTORY + separator + "minecraft" + separator + "tags" + separator + "functions" + separator + "load.json")))
-		{
-			mcLoadCreator.write(("{\n" +
-			                     "    \"values\": [\n" +
-			                     "        \"" + nameSpace + ":load\"\n" +
-			                     "    ]\n" +
-			                     "}").getBytes());
-		}
-		
-		try (FileOutputStream ownLoadCreator = new FileOutputStream(new File(SOURCE_DIRECTORY + separator + nameSpace + separator + "functions" + File.separator + "load.mcfunction")))
-		{
-			ownLoadCreator.write(("\\if <<dev>>\n" +
-			                      "/tellraw @a \"<<" + DATAPACK_NAME.getKey() + ">> is loaded\"").getBytes());
-		}
-		
-		try (FileOutputStream ownLoadCreator = new FileOutputStream(new File(SOURCE_DIRECTORY + separator + nameSpace + separator + "functions" + File.separator + "uninstall.mcfunction")))
-		{
-			ownLoadCreator.write(("# Remove any scoreboards here\n" +
-			                      "\n" +
-			                      "# Disable the datapack\n" +
-			                      "\\var successStorage uninstallSuccess\n" +
-			                      "/scoreboard objectives add <<successStorage>> dummy\n" +
-			                      "/execute store result score @s <<successStorage>> run datapack disable \"file/<<DATAPACK_NAME>>.zip\"\n" +
-			                      "/tellraw @s[scores={<<successStorage>>=0}] {\n" +
-			                      "\t\"text\":\"Disable/remove the zip file to uninstall\",\n" +
-			                      "\t\"italic\":true,\n" +
-			                      "\t\"color\":\"red\"\n" +
-			                      "}\n" +
-			                      "/tellraw @s[scores={<<successStorage>>=1..}] {\n" +
-			                      "\t\"text\":\"The datapack is disabled but should be removed to completely uninstall\",\n" +
-			                      "\t\"italic\":true,\n" +
-			                      "\t\"color\":\"green\"\n" +
-			                      "}\n" +
-			                      "/scoreboard objectives remove <<successStorage>>").getBytes());
-		}
-	}
-	
-	private static class Dir
-	{
-		private String path = "";
-		public final String name;
-		public final Dir[] subs;
-		
-		public Dir(String name, Dir... subs)
-		{
-			this.name = name;
-			this.subs = subs;
-		}
-		
-		public void create()
-		{
-			File file = new File(path + name);
-			if (file.exists())
-			{
-				if (!file.isDirectory())
-				{
-					throw new InitializeException(name + " already exists but isn't a directory");
-				}
-			}
-			else
-			{
-				if (!file.mkdir())
-				{
-					throw new InitializeException("could not create directory " + name);
-				}
-			}
-			for (Dir sub : subs)
-			{
-				sub.path = path + name + separator;
-				sub.create();
-			}
-		}
 	}
 }

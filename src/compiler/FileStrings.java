@@ -7,7 +7,7 @@ import compiler.upgrader.Version;
  */
 public class FileStrings
 {
-	private FileStrings() {}
+	protected FileStrings() {}
 	
 	/**
 	 * The directory that should be parsed and or copied
