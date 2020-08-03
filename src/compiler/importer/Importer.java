@@ -29,7 +29,7 @@ public class Importer
 		copy(existingSources);
 		JSONObject pack = getPack(mcMeta);
 		Initialize.createConfigFile(new File("./").getCanonicalFile().getName(),
-		                            pack.getString("description"),
+		                            pack.get("description").toString(),
 		                            pack.getInt("pack_format"),
 		                            extraFiles);
 	}

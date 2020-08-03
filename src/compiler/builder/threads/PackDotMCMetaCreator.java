@@ -25,10 +25,17 @@ public class PackDotMCMetaCreator extends Thread
 	{
 		try (FileOutputStream fileOutputStream = new FileOutputStream(new File(PACK_DOT_MCMETA)))
 		{
+			String jsonDescription = this.description;
+			if (!(jsonDescription.startsWith("{") && jsonDescription.endsWith("}")) &&
+			    !(jsonDescription.startsWith("[") && jsonDescription.endsWith("]")) &&
+			    !(jsonDescription.startsWith("\"") && jsonDescription.endsWith("\"")))
+			{
+				jsonDescription = "\"" + jsonDescription + "\"";
+			}
 			fileOutputStream.write(("{" +
 			                        "\"pack\":{" +
 			                        "\"pack_format\":" + packFormat + "," +
-			                        "\"description\":\"" + description + "\"" +
+			                        "\"description\":" + jsonDescription +
 			                        "}" +
 			                        "}").getBytes());
 			fileOutputStream.flush();
