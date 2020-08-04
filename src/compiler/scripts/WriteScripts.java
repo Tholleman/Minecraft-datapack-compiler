@@ -31,6 +31,7 @@ public class WriteScripts
 		assert passArgument != null;
 		write("build." + fileExtension, executeJar + passArgument);
 		write("clean." + fileExtension, executeJar + " clean");
+		write("analyze." + fileExtension, executeJar + " analyze");
 		System.out.println("Scripts are created");
 	}
 	

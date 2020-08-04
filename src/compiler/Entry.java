@@ -1,5 +1,6 @@
 package compiler;
 
+import compiler.analyze.Analyzer;
 import compiler.builder.Builder;
 import compiler.cleaner.Cleaner;
 import compiler.importer.Importer;
@@ -91,6 +92,11 @@ public class Entry
 			case "import":
 				checkArgumentAmount(args, 0);
 				Importer.create();
+				return;
+			case "analyze":
+				File outputDir = new File(FileStrings.OUTPUT_DIRECTORY);
+				if (!outputDir.exists()) main(new String[0]);
+				Analyzer.analyze(outputDir, new File("report.txt"));
 				return;
 			case "version":
 				checkArgumentAmount(args, 0);

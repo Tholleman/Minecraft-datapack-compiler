@@ -12,6 +12,7 @@ build: to build the datapack.
 clean: To remove all artifacts that the regular build creates.
 
 Miscellaneous
+analyze: simple counter for lines that might be intensive.
 version: Shows which meta file standard this compiler works with.
 credits: To see who worked on this project.
 license: Print the MIT license
