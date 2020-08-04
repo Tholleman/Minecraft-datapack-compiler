@@ -32,7 +32,10 @@ public class Analyzer
 		{
 			if (child.isFile())
 			{
-				analyzeCode(child);
+				if (child.getName().endsWith(".mcfunction"))
+				{
+					analyzeCode(child);
+				}
 			}
 			else if (child.isDirectory())
 			{
