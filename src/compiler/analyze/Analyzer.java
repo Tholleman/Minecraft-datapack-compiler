@@ -67,7 +67,11 @@ public class Analyzer
 				{
 					file.addEntityCheck(new Line(line, lineCounter));
 				}
-				if (line.contains("@a") && !line.contains("gamemode="))
+				if ((line.contains("@a") ||
+				     line.contains("@p") ||
+				     line.contains("@r") ||
+				     (line.contains("@e[") && line.contains("type=minecraft:player")))
+				    && !line.contains("gamemode="))
 				{
 					file.addSpectatorPlayers(new Line(line, lineCounter));
 				}
@@ -97,10 +101,10 @@ public class Analyzer
 				List<Line> entityChecks = analyzedFile.getNbt();
 				if (!entityChecks.isEmpty())
 				{
-					write(analyzedFile.path, fw);
+					write('\t' + analyzedFile.path, fw);
 					for (Line entityCheck : entityChecks)
 					{
-						write(entityCheck.number + ": " + entityCheck.value, fw);
+						write("\t\t" + entityCheck.number + ": " + entityCheck.value, fw);
 					}
 				}
 			}
@@ -111,10 +115,10 @@ public class Analyzer
 				List<Line> entityChecks = analyzedFile.getEntityChecks();
 				if (!entityChecks.isEmpty())
 				{
-					write(analyzedFile.path, fw);
+					write('\t' + analyzedFile.path, fw);
 					for (Line entityCheck : entityChecks)
 					{
-						write(entityCheck.number + ": " + entityCheck.value, fw);
+						write("\t\t" + entityCheck.number + ": " + entityCheck.value, fw);
 					}
 				}
 			}
@@ -125,10 +129,10 @@ public class Analyzer
 				List<Line> entityChecks = analyzedFile.getSpectatorPlayers();
 				if (!entityChecks.isEmpty())
 				{
-					write(analyzedFile.path, fw);
+					write('\t' + analyzedFile.path, fw);
 					for (Line entityCheck : entityChecks)
 					{
-						write(entityCheck.number + ": " + entityCheck.value, fw);
+						write("\t\t" + entityCheck.number + ": " + entityCheck.value, fw);
 					}
 				}
 			}
@@ -139,10 +143,10 @@ public class Analyzer
 				List<Line> entityChecks = analyzedFile.getCreateEntities();
 				if (!entityChecks.isEmpty())
 				{
-					write(analyzedFile.path, fw);
+					write('\t' + analyzedFile.path, fw);
 					for (Line entityCheck : entityChecks)
 					{
-						write(entityCheck.number + ": " + entityCheck.value, fw);
+						write("\t\t" + entityCheck.number + ": " + entityCheck.value, fw);
 					}
 				}
 			}
