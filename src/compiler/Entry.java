@@ -12,6 +12,7 @@ import compiler.upgrader.Upgrader;
 import compiler.upgrader.Version;
 
 import java.io.*;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.util.List;
 
@@ -50,7 +51,7 @@ public class Entry
 		}
 	});
 	
-	public static void main(String[] args) throws IOException, InterruptedException
+	public static void main(String[] args) throws IOException, InterruptedException, URISyntaxException
 	{
 		File error = new File("Error.txt");
 		if (error.exists() && error.isFile())

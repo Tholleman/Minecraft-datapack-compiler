@@ -1,18 +1,20 @@
 package compiler.scripts;
 
 import compiler.FileStrings;
+import compiler.initializer.Initialize;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.URISyntaxException;
 
 public class WriteScripts
 {
 	private WriteScripts() {}
 	
-	public static void writeScripts(String fileExtension) throws IOException
+	public static void writeScripts(String fileExtension) throws IOException, URISyntaxException
 	{
-		String executeJar = "java -jar \"" + new File("./").getAbsolutePath() + File.separator + "compiler.jar\"";
+		String executeJar = "java -jar \"" + new File(Initialize.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getAbsolutePath() + "\"";
 		String passArgument = null;
 		switch (fileExtension)
 		{
