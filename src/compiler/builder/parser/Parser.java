@@ -382,6 +382,7 @@ public class Parser
 		
 		public void writeLine(String line)
 		{
+			line = line.replace("\n", "\\n");
 			try
 			{
 				for (int i = 0; i < repeat; i++)
