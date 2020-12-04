@@ -1,0 +1,21 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"ingredients": [
+		{
+			"item": "minecraft:bowl"
+		},
+		{
+			"tag": "soup:meats"
+		},
+		{
+			"tag": "soup:veggies"
+		},
+		{
+			"tag": "soup:veggies"
+		}
+	],
+	"result": {
+		"item": "minecraft:rabbit_stew",
+		"count": 1
+	}
+}

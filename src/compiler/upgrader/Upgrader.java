@@ -2,6 +2,9 @@ package compiler.upgrader;
 
 import compiler.CompilerException;
 import compiler.FileStrings;
+import compiler.properties.Property;
+
+import java.util.Map;
 
 import static compiler.properties.Property.PARSE_STANDARD;
 import static compiler.upgrader.Version.*;
@@ -33,9 +36,26 @@ public class Upgrader
 				// fallthrough
 			case V1_4:
 				result.append(V1_5.toPrint()).append("\n");
-				// fallthrough
+				break;
 			case V1_5:
-				assert V1_5 == current();
+				Map<String, String> variables = Property.getVariables();
+				Property.DATAPACK_FORMAT.setValueWhenEmpty(variables.get("PACK_FORMAT"));
+				Property.remove("PACK_FORMAT");
+				Property.DATAPACK_INCLUDE.setValueWhenEmpty(variables.get("ZIP_INCLUDE"));
+				Property.remove("ZIP_INCLUDE");
+				
+				Property.RESOURCEPACK_NAME.setValueWhenEmpty(Property.DATAPACK_NAME.getValue());
+				Property.RESOURCEPACK_DESCRIPTION.setValueWhenEmpty(Property.DATAPACK_DESCRIPTION.getValue());
+				Property.RESOURCEPACK_INCLUDE.setValueWhenEmpty(Property.DATAPACK_INCLUDE.getValue());
+				Property.RESOURCEPACK_FORMAT.setValueWhenEmpty(Property.DATAPACK_FORMAT.getValue());
+				
+				Property.PREFER_RESOURCEPACK_MCMETA.setValueWhenEmpty("false");
+				
+				Property.store();
+				
+				// fallthrough
+			case V1_6:
+				assert V1_6 == current();
 				break;
 			case UNKNOWN:
 			default:

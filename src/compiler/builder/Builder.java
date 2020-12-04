@@ -42,13 +42,25 @@ public class Builder
 		Cleaner.fullClean();
 		System.out.println("Removed artifacts from previous build");
 		
+		boolean dataFirst = Boolean.parseBoolean(PREFER_RESOURCEPACK_MCMETA.getValue());
+		if (!dataFirst)
+		{
+			ResourcepackBuilder.build(threadHandler);
+		}
+		
 		boolean createdDataDirectory = iterate(new File(SOURCE_DIRECTORY), threadHandler);
 		if (!createdDataDirectory)
 		{
 			System.out.println("The data source directory was empty (or only filled with files that are ignored)");
 			return;
 		}
-		threadHandler.run(new PackDotMCMetaCreator(DATAPACK_DESCRIPTION.getValue(), PACK_FORMAT.getValue()));
+		
+		File file = new File(PACK_DOT_MCMETA);
+		if (file.exists())
+		{
+			file.delete();
+		}
+		threadHandler.run(new PackDotMCMetaCreator(DATAPACK_DESCRIPTION.getValue(), DATAPACK_FORMAT.getValue()));
 		
 		threadHandler.join();
 		System.out.println("All files inside \"" + SOURCE_DIRECTORY + "\" are now parsed and ready to be used");
@@ -58,6 +70,11 @@ public class Builder
 			File[] toZip = getFilesToZip();
 			Zipper.zip(toZip, getDestZipFile());
 			System.out.println("The datapack is now a .zip file and ready to be distributed");
+			
+			if (dataFirst)
+			{
+				ResourcepackBuilder.build(threadHandler);
+			}
 			
 			if (Boolean.parseBoolean(CLEAN_AFTER.getValue()))
 			{
@@ -86,11 +103,11 @@ public class Builder
 	
 	private static File[] getFilesToZip()
 	{
-		if (ZIP_INCLUDE.getValue().trim().isEmpty())
+		if (DATAPACK_INCLUDE.getValue().trim().isEmpty())
 		{
 			return new File[]{new File(PACK_DOT_MCMETA), new File(OUTPUT_DIRECTORY)};
 		}
-		String[] extraFileNames = ZIP_INCLUDE.getValue().split(",");
+		String[] extraFileNames = DATAPACK_INCLUDE.getValue().split(",");
 		File[] files = new File[extraFileNames.length + 2];
 		files[0] = new File(PACK_DOT_MCMETA);
 		files[1] = new File(OUTPUT_DIRECTORY);

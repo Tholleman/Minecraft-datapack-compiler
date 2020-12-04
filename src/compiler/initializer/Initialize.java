@@ -142,13 +142,19 @@ public class Initialize
 		
 		DATAPACK_NAME.setValueWhenEmpty(projectName);
 		DATAPACK_DESCRIPTION.setValueWhenEmpty(description);
-		PACK_FORMAT.setValueWhenEmpty("" + format);
-		ZIP_INCLUDE.setValueWhenEmpty(extraFiles);
+		DATAPACK_INCLUDE.setValueWhenEmpty(extraFiles);
+		DATAPACK_FORMAT.setValueWhenEmpty("" + format);
+		
+		RESOURCEPACK_NAME.setValueWhenEmpty(projectName);
+		RESOURCEPACK_DESCRIPTION.setValueWhenEmpty(description);
+		RESOURCEPACK_INCLUDE.setValueWhenEmpty(extraFiles);
+		RESOURCEPACK_FORMAT.setValueWhenEmpty("" + format);
 		
 		PARSE_STANDARD.setValueWhenEmpty(Version.current().code);
 		BLACKLIST.setValueWhenEmpty(".*\\\\.txt, .*\\\\.md");
 		ZIP.setValueWhenEmpty("true");
 		CLEAN_AFTER.setValueWhenEmpty("false");
+		PREFER_RESOURCEPACK_MCMETA.setValueWhenEmpty("false");
 		
 		Property.add("dev", "true");
 		

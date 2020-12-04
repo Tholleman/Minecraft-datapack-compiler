@@ -21,6 +21,7 @@ public class Cleaner
 		}
 		
 		delete(new File(OUTPUT_DIRECTORY));
+		delete(new File(RESOURCE_OUTPUT_DIRECTORY));
 		delete(new File(PACK_DOT_MCMETA));
 	}
 	

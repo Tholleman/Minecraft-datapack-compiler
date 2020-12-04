@@ -17,13 +17,19 @@ public enum Property
 {
 	DATAPACK_NAME,
 	DATAPACK_DESCRIPTION,
-	PACK_FORMAT,
-	ZIP_INCLUDE,
+	DATAPACK_INCLUDE,
+	DATAPACK_FORMAT,
+	
+	RESOURCEPACK_NAME,
+	RESOURCEPACK_DESCRIPTION,
+	RESOURCEPACK_INCLUDE,
+	RESOURCEPACK_FORMAT,
 	
 	PARSE_STANDARD,
 	BLACKLIST,
 	ZIP,
-	CLEAN_AFTER;
+	CLEAN_AFTER,
+	PREFER_RESOURCEPACK_MCMETA;
 	
 	private static final java.util.Properties propertiesLoader = new java.util.Properties();
 	
@@ -59,14 +65,21 @@ public enum Property
 			fw.write("# Datapack data\n"
 			         + DATAPACK_NAME.safeString() + "\n"
 			         + DATAPACK_DESCRIPTION.safeString() + "\n"
-			         + ZIP_INCLUDE.safeString() + "\n"
-			         + PACK_FORMAT.safeString() + "\n"
+			         + DATAPACK_INCLUDE.safeString() + "\n"
+			         + DATAPACK_FORMAT.safeString() + "\n"
+			         + "\n"
+			         + "# Resourcepack data\n"
+			         + RESOURCEPACK_NAME.safeString() + "\n"
+			         + RESOURCEPACK_DESCRIPTION.safeString() + "\n"
+			         + RESOURCEPACK_INCLUDE.safeString() + "\n"
+			         + RESOURCEPACK_FORMAT.safeString() + "\n"
 			         + "\n"
 			         + "# Compiler \n"
 			         + PARSE_STANDARD.safeString() + "\n"
 			         + BLACKLIST.safeString() + "\n"
 			         + ZIP.safeString() + "\n"
 			         + CLEAN_AFTER.safeString() + "\n"
+			         + PREFER_RESOURCEPACK_MCMETA.safeString() + "\n"
 			         + "\n" +
 			         "# Global Variables\n");
 			List<Property> properties = new ArrayList<>(Arrays.asList(Property.values()));
@@ -93,6 +106,15 @@ public enum Property
 	public static void add(String key, String value)
 	{
 		propertiesLoader.put(key, value);
+	}
+	
+	public static void remove(String key)
+	{
+		for (Property value : Property.values())
+		{
+			assert !value.getKey().equals(key);
+		}
+		propertiesLoader.remove(key);
 	}
 	
 	public static Map<String, String> getVariables()

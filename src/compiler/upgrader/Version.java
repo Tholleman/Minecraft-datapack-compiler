@@ -12,7 +12,14 @@ public enum Version
 	     "Add \"BLACKLIST=.*\\.txt, .*\\.md\" to config.properties"),
 	V1_5("Metafile 1.5", "Adding other files to the zip is now possible",
 	     "Add \"ZIP_INCLUDE=\" to config.properties"),
-	;
+	V1_6("Metafile 1.6", "Compiler can now also create resource packs",
+	     "change ZIP_INCLUDE into DATAPACK_INCLUDE",
+	     "change PACK_FORMAT into DATAPACK_FORMAT",
+	     "add RESOURCEPACK_NAME=",
+	     "add RESOURCEPACK_DESCRIPTION=",
+	     "add RESOURCEPACK_INCLUDE=",
+	     "add RESOURCEPACK_FORMAT=",
+	     "add PREFER_RESOURCEPACK_MCMETA=false");
 	
 	public final String code;
 	private final String changelog;
@@ -51,6 +58,6 @@ public enum Version
 	
 	public static Version current()
 	{
-		return V1_5;
+		return V1_6;
 	}
 }

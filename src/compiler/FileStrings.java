@@ -20,6 +20,13 @@ public class FileStrings
 	public static final String OUTPUT_DIRECTORY = "data";
 	
 	/**
+	 * The resourcepack directory that should be parsed and or copied
+	 */
+	public static final String RESOURCE_SOURCE_DIRECTORY = "assets source";
+	
+	public static final String RESOURCE_OUTPUT_DIRECTORY = "assets";
+	
+	/**
 	 * Path to the config file
 	 */
 	public static final String CONFIG_PATH = "config.properties";
