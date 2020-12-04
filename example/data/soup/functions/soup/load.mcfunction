@@ -1,1 +1,0 @@
-scoreboard objectives add soup minecraft.used:minecraft.rabbit_stew

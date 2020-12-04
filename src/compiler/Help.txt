@@ -4,8 +4,8 @@ Use no argument to automatically detect what to run between build, import, or in
 Starting out
 init: To create the framework for a new datapack.
 import: To import an existing datapack.
-scripts: Create an executable script, has to be run with sh, bat, or any other file extension you want.
-rfc: Make a cheat sheet about how to code in Metafile 1.5
+scripts: Create executable script(s), has to be run with sh, bat, or any other file extension you want.
+rfc: Make a cheat sheet about how to code in Metafile 1.6
 
 Normal use
 build: to build the datapack.
