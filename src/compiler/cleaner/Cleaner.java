@@ -20,9 +20,7 @@ public class Cleaner
 			if (file.getName().endsWith(FileExtensions.ZIP)) unsafeDelete(file);
 		}
 		
-		delete(new File(OUTPUT_DIRECTORY));
-		delete(new File(RESOURCE_OUTPUT_DIRECTORY));
-		delete(new File(PACK_DOT_MCMETA));
+		postClean();
 	}
 	
 	private static void checkForSources(File[] files)
@@ -53,6 +51,7 @@ public class Cleaner
 	public static void postClean() throws IOException
 	{
 		delete(new File(OUTPUT_DIRECTORY));
+		delete(new File(RESOURCE_OUTPUT_DIRECTORY));
 		delete(new File(PACK_DOT_MCMETA));
 	}
 	
