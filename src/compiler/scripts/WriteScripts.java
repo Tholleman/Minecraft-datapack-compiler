@@ -2,6 +2,8 @@ package compiler.scripts;
 
 import compiler.FileStrings;
 import compiler.initializer.Initialize;
+import compiler.properties.Property;
+import compiler.properties.SetupException;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -32,9 +34,32 @@ public class WriteScripts
 		// assertion for future development
 		assert passArgument != null;
 		write("build." + fileExtension, executeJar + passArgument);
+		if (new File(FileStrings.CONFIG_PATH).exists())
+		{
+			try
+			{
+				Property.load();
+				if (!Boolean.parseBoolean(Property.CLEAN_AFTER.getValue()))
+				{
+					createDataDependentScripts(fileExtension, executeJar);
+				}
+			}
+			catch (SetupException e)
+			{
+				createDataDependentScripts(fileExtension, executeJar);
+			}
+		}
+		else
+		{
+			createDataDependentScripts(fileExtension, executeJar);
+		}
+		System.out.println("Scripts are created");
+	}
+	
+	private static void createDataDependentScripts(String fileExtension, String executeJar) throws IOException
+	{
 		write("clean." + fileExtension, executeJar + " clean");
 		write("analyze." + fileExtension, executeJar + " analyze");
-		System.out.println("Scripts are created");
 	}
 	
 	private static void write(String fileName, String content) throws IOException
