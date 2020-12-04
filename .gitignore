@@ -4,9 +4,4 @@
 compiler.iml
 
 # Testing data
-/data
-/data source
-config.properties
-*.zip
-*.mcmeta
-Error.txt
+/example
