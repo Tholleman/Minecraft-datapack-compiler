@@ -8,6 +8,7 @@ public class Analyzer
 {
 	private final Counter counter = new Counter();
 	private final ArrayList<AnalyzedFile> analyzedFiles = new ArrayList<>();
+	private final ArrayList<String> emptyFiles = new ArrayList<>();
 	
 	public static void analyze(File directory, File output)
 	{
@@ -58,11 +59,13 @@ public class Analyzer
 		{
 			AnalyzedFile file = new AnalyzedFile(functionFile.getPath(), counter);
 			analyzedFiles.add(file);
+			boolean isEmpty = true;
 			String line;
 			int lineCounter = 0;
 			while ((line = br.readLine()) != null)
 			{
 				lineCounter++;
+				if (!line.trim().isEmpty()) isEmpty = false;
 				if (line.contains("@e"))
 				{
 					file.addEntityCheck(new Line(line, lineCounter));
@@ -84,6 +87,10 @@ public class Analyzer
 					file.addNbt(new Line(line, lineCounter));
 				}
 			}
+			if (isEmpty)
+			{
+				emptyFiles.add(functionFile.getPath());
+			}
 		}
 		catch (IOException e)
 		{
@@ -95,6 +102,12 @@ public class Analyzer
 	{
 		try (FileWriter fw = new FileWriter(output))
 		{
+			write(emptyFiles.size() + " files are empty", fw);
+			for (String emptyFile : emptyFiles)
+			{
+				write('\t' + emptyFile, fw);
+			}
+			write("", fw);
 			write(counter.getNbt() + " lines contain nbt", fw);
 			for (AnalyzedFile analyzedFile : analyzedFiles)
 			{
